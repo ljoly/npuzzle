@@ -1,7 +1,6 @@
-# This puzzle is solvable
-4 # test
-# test
- 9 15 14 13
+#This puzzle is solvable
+4 #test
+ 9 15 14 13 #test
  8 12  7  1
 11  3  2  4
  0  6  5 10
