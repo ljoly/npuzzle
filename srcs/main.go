@@ -30,7 +30,7 @@ func get_size(line []string) (int, [][]int) {
 	return size, tab
 }
 
-func parse(file string) ([][]int) {
+func parse(file string) ([][]int, int) {
 	var size, x = 0, 0
 	var tab [][] int
 	var lines = strings.Split(file, "\n")
@@ -60,7 +60,7 @@ func parse(file string) ([][]int) {
 			}
 		}
 	}
-	return (tab)
+	return tab, size
 }
 
 func main() {
@@ -73,6 +73,6 @@ func main() {
         panic(err)
 	}
 	fmt.Println(string(file))
-	tab := parse(string(file))
-	fmt.Println(tab)
+	tab, size := parse(string(file))
+	fmt.Println(tab, size)
 }
