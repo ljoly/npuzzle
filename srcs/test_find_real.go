@@ -2,71 +2,41 @@ package main
 
 import "fmt"
 
-func main() {
-	var i, j = 0, 0
-	var min = 0
-	var iter = 1
-	var tab [10][10]int
-	var N = 10
-	var init = 10
+func get_answer(size int) {
+
+	var puzzle [][]int
+	var cursor = 1
+	var x = 0
+	var ix = 1
+	var y = 0
+	var iy = 0
+
+	puzzle = make([][]int, size)
+	for i := 0; i < len(puzzle); i++ {
+		puzzle[i] = make([]int, size)
+		for j := 0; j < len(puzzle); j++ {
+			puzzle[i][j] = -1
+		}
+	}
+
 	for {
-		
-		if (iter > init * init) {
-			fmt.Println(iter)
-			fmt.Println("END ?")
+		puzzle[y][x] = cursor
+		if cursor == 0{
 			break
 		}
-		
-		if (i == min) {
-			if (j != N - 1) {
-				tab[i][j] = iter
-				j++
-			} else {
-				tab[i][j] = iter
-				i++
-			}
-		} else if (j == N - 1) {
-			if (i != N - 1) {
-				tab[i][j] = iter
-				i++
-			} else {
-				tab[i][j] = iter
-				j--
-			}
-		} else if (i == N - 1) {
-			if (j != min) {
-				tab[i][j] = iter
-				j--
-			} else {
-				tab[i][j] = iter
-				i--
-			}
-		} else if (j == min) {
-			if (i != min) {
-				tab[i][j] = iter
-				i--
-			} else {
-				tab[i][j] = iter
-				j++
-			}
+		cursor += 1
+		if x + ix == size || x + ix < 0 || (ix != 0 && puzzle[y][x + ix] != -1) {
+			iy = ix
+			ix = 0
+		} else if y + iy == size || y + iy < 0 || (iy != 0 && puzzle[y + iy][x] != -1) {
+			ix = -iy
+			iy = 0
 		}
-		if (iter == 4 * N - 4) {
-			N--
-			min++
-			i++
+		x += ix
+		y += iy
+		if cursor == size * size {
+			cursor = 0
 		}
-		iter++
-		fmt.Println(tab[0])
-		fmt.Println(tab[1])
-		fmt.Println(tab[2])
-		fmt.Println(tab[3])
-		fmt.Println(tab[4])
-		fmt.Println(tab[5])
-		fmt.Println(tab[6])
-		fmt.Println(tab[7])
-		fmt.Println(tab[8])
-		fmt.Println(tab[9])
-		fmt.Println("-----------------")
 	}
-	fmt.Println(tab)
+	fmt.Println(puzzle)
 }
