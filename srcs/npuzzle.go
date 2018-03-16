@@ -6,46 +6,44 @@ var (
 	finalState [][]int
 )
 
-func getFinalState(size int) [][]int {
-	var puzzle [][]int
+func getFinalState(e *Env) {
 	var cursor = 1
 	var x = 0
 	var ix = 1
 	var y = 0
 	var iy = 0
 
-	puzzle = make([][]int, size)
-	for i := 0; i < len(puzzle); i++ {
-		puzzle[i] = make([]int, size)
-		for j := 0; j < len(puzzle); j++ {
-			puzzle[i][j] = -1
+	e.finalState = make([][]int, e.boardSize)
+	for i := 0; i < len(e.finalState); i++ {
+		e.finalState[i] = make([]int, e.boardSize)
+		for j := 0; j < len(e.finalState); j++ {
+			e.finalState[i][j] = -1
 		}
 	}
 	for {
-		puzzle[y][x] = cursor
+		e.finalState[y][x] = cursor
 		if cursor == 0 {
 			break
 		}
 		cursor++
-		if x+ix == size || x+ix < 0 || (ix != 0 && puzzle[y][x+ix] != -1) {
+		if x+ix == e.boardSize || x+ix < 0 || (ix != 0 && e.finalState[y][x+ix] != -1) {
 			iy = ix
 			ix = 0
-		} else if y+iy == size || y+iy < 0 || (iy != 0 && puzzle[y+iy][x] != -1) {
+		} else if y+iy == e.boardSize || y+iy < 0 || (iy != 0 && e.finalState[y+iy][x] != -1) {
 			ix = -iy
 			iy = 0
 		}
 		x += ix
 		y += iy
-		if cursor == size*size {
+		if cursor == e.boardSize*e.boardSize {
 			cursor = 0
 		}
 	}
-	return (puzzle)
 }
 
-func play(size int) {
-	finalState := getFinalState(size)
-	for i := 0; i < size; i++ {
-		fmt.Println(finalState[i])
+func play(e Env) {
+	getFinalState(&e)
+	for i := 0; i < e.boardSize; i++ {
+		fmt.Println(e.finalState[i])
 	}
 }
