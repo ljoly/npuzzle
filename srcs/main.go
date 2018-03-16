@@ -9,7 +9,7 @@ import (
 var (
 	initState [][]int
 	file      string
-	size      string
+	size      int
 )
 
 func main() {
