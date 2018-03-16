@@ -21,20 +21,20 @@ func get_answer(size int) {
 
 	for {
 		puzzle[y][x] = cursor
-		if cursor == 0{
+		if cursor == 0 {
 			break
 		}
 		cursor += 1
-		if x + ix == size || x + ix < 0 || (ix != 0 && puzzle[y][x + ix] != -1) {
+		if x+ix == size || x+ix < 0 || (ix != 0 && puzzle[y][x+ix] != -1) {
 			iy = ix
 			ix = 0
-		} else if y + iy == size || y + iy < 0 || (iy != 0 && puzzle[y + iy][x] != -1) {
+		} else if y+iy == size || y+iy < 0 || (iy != 0 && puzzle[y+iy][x] != -1) {
 			ix = -iy
 			iy = 0
 		}
 		x += ix
 		y += iy
-		if cursor == size * size {
+		if cursor == size*size {
 			cursor = 0
 		}
 	}
