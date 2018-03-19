@@ -1,44 +1,48 @@
 package main
 
-import "fmt"
-
-var (
-	finalState [][]int
+import (
+	"container/heap"
+	"fmt"
 )
 
-func getFinalState(e *Env) {
-	var cursor = 1
-	var x = 0
-	var ix = 1
-	var y = 0
-	var iy = 0
+type State struct {
+	heur     int // The value of the item; arbitrary.
+	priority int // The priority of the item in the queue.
+	// The index is needed by update and is maintained by the heap.Interface methods.
+	index  int // The index of the item in the heap.
+	parent *State
+}
 
-	e.finalState = make([][]int, e.boardSize)
-	for i := 0; i < len(e.finalState); i++ {
-		e.finalState[i] = make([]int, e.boardSize)
-		for j := 0; j < len(e.finalState); j++ {
-			e.finalState[i][j] = -1
-		}
-	}
-	for {
-		e.finalState[y][x] = cursor
-		if cursor == 0 {
-			break
-		}
-		cursor++
-		if x+ix == e.boardSize || x+ix < 0 || (ix != 0 && e.finalState[y][x+ix] != -1) {
-			iy = ix
-			ix = 0
-		} else if y+iy == e.boardSize || y+iy < 0 || (iy != 0 && e.finalState[y+iy][x] != -1) {
-			ix = -iy
-			iy = 0
-		}
-		x += ix
-		y += iy
-		if cursor == e.boardSize*e.boardSize {
-			cursor = 0
-		}
-	}
+type PriorityQueue []*State
+
+func (pq PriorityQueue) Len() int { return len(pq) }
+
+func (pq PriorityQueue) Less(i, j int) bool {
+	// We want Pop to give us the highest, not lowest, priority so we use greater than here.
+	return pq[i].priority > pq[j].priority
+}
+
+func (pq PriorityQueue) Swap(i, j int) {
+	pq[i], pq[j] = pq[j], pq[i]
+	pq[i].index = i
+	pq[j].index = j
+}
+
+func (pq *PriorityQueue) Push(x interface{}) {
+	n := len(*pq)
+	fmt.Println(x)
+	state := x.(*State)
+	state.index = n
+	*pq = append(*pq, state)
+}
+
+func (pq *PriorityQueue) Pop() interface{} {
+	old := *pq
+	n := len(old)
+	state := old[n-1]
+	state.index = -1 // for safety
+	*pq = old[0 : n-1]
+	return state
 }
 
 func play(e Env) {
@@ -46,4 +50,26 @@ func play(e Env) {
 	for i := 0; i < e.boardSize; i++ {
 		fmt.Println(e.finalState[i])
 	}
+	x, y := getIndexToMove(e, e.initState)
+	// possibilities := getPossibilities(e, e.initState, x, y)
+	fmt.Println(x, y)
+
+	pq := make(PriorityQueue, 1)
+	pq[0] = &State{
+		heur:     1,
+		priority: 1,
+		// index:    0,
+		parent: nil,
+	}
+	heap.Init(&pq)
+	new := &State{
+		heur:     2,
+		priority: 2,
+		// index:    0,
+		parent: nil,
+	}
+
+	heap.Push(&pq, new)
+
+	// fmt.Println(pq[0])
 }
