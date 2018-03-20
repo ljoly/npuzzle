@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
-	"time"
 )
 
 type Env struct {
@@ -16,7 +15,6 @@ type Env struct {
 }
 
 func main() {
-	time.Sleep(time.Second * 18)
 	var arg = os.Args[1:]
 	if len(arg) != 1 {
 		printError("Wrong number of arguments : need 1")
