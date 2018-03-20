@@ -6,6 +6,7 @@ import (
 )
 
 type State struct {
+	board    []int
 	heur     int // The value of the item; arbitrary.
 	priority int // The priority of the item in the queue.
 	// The index is needed by update and is maintained by the heap.Interface methods.
@@ -66,10 +67,11 @@ func play(e Env) {
 		heur:     2,
 		priority: 2,
 		// index:    0,
+		board:  e.initState,
 		parent: nil,
 	}
-
-	heap.Push(&pq, new)
-
 	// fmt.Println(pq[0])
+	heap.Push(&pq, new)
+	heuristic := heuristic(e, new)
+	fmt.Println(heuristic)
 }

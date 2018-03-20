@@ -19,7 +19,7 @@ func atoi(str string) int {
 	return val
 }
 
-func getPossibilities(e Env, state [][]int, x int, y int) int {
+func getPossibilities(e Env, state []int, x int, y int) int {
 	possibilities := 2
 	if (x == 0 || x == e.boardSize-1) && y < e.boardSize-1 && y > 0 {
 		possibilities = 3
@@ -31,10 +31,10 @@ func getPossibilities(e Env, state [][]int, x int, y int) int {
 	return possibilities
 }
 
-func getIndexToMove(e Env, state [][]int) (int, int) {
+func getIndexToMove(e Env, state []int) (int, int) {
 	for y := 0; y < e.boardSize; y++ {
 		for x := 0; x < e.boardSize; x++ {
-			if state[y][x] == 0 {
+			if state[y*e.boardSize+x] == 0 {
 				return x, y
 			}
 		}
@@ -49,23 +49,20 @@ func getFinalState(e *Env) {
 	var y = 0
 	var iy = 0
 
-	e.finalState = make([][]int, e.boardSize)
+	e.finalState = make([]int, e.boardSize*e.boardSize)
 	for i := 0; i < len(e.finalState); i++ {
-		e.finalState[i] = make([]int, e.boardSize)
-		for j := 0; j < len(e.finalState); j++ {
-			e.finalState[i][j] = -1
-		}
+		e.finalState[i] = -1
 	}
 	for {
-		e.finalState[y][x] = cursor
+		e.finalState[y*e.boardSize+x] = cursor
 		if cursor == 0 {
 			break
 		}
 		cursor++
-		if x+ix == e.boardSize || x+ix < 0 || (ix != 0 && e.finalState[y][x+ix] != -1) {
+		if x+ix == e.boardSize || x+ix < 0 || (ix != 0 && e.finalState[y*e.boardSize+x+ix] != -1) {
 			iy = ix
 			ix = 0
-		} else if y+iy == e.boardSize || y+iy < 0 || (iy != 0 && e.finalState[y+iy][x] != -1) {
+		} else if y+iy == e.boardSize || y+iy < 0 || (iy != 0 && e.finalState[(y+iy)*e.boardSize+x] != -1) {
 			ix = -iy
 			iy = 0
 		}

@@ -7,10 +7,11 @@ import (
 )
 
 type Env struct {
-	initState  [][]int
-	finalState [][]int
+	initState  []int
+	finalState []int
 	file       string
 	boardSize  int
+	heuristic  int
 }
 
 func main() {
@@ -28,6 +29,7 @@ func main() {
 	tab, size := parseFile(string(e.file))
 	e.initState = tab
 	e.boardSize = size
+	e.heuristic = 1
 	fmt.Println(tab)
 	play(e)
 }
