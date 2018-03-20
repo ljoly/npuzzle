@@ -19,27 +19,13 @@ func atoi(str string) int {
 	return val
 }
 
-func getPossibilities(e Env, state []int, x int, y int) int {
-	possibilities := 2
-	if (x == 0 || x == e.boardSize-1) && y < e.boardSize-1 && y > 0 {
-		possibilities = 3
-	} else if x > 0 && x < e.boardSize-1 && (y == 0 || y == e.boardSize-1) {
-		possibilities = 3
-	} else {
-		possibilities = 4
-	}
-	return possibilities
-}
-
-func getIndexToMove(e Env, state []int) (int, int) {
-	for y := 0; y < e.boardSize; y++ {
-		for x := 0; x < e.boardSize; x++ {
-			if state[y*e.boardSize+x] == 0 {
-				return x, y
-			}
+func getIndexToMove(state []int) int {
+	for i := 0; i < len(state); i++ {
+		if state[i] == 0 {
+			return i
 		}
 	}
-	return -1, -1
+	return -1
 }
 
 func getFinalState(e *Env) {
