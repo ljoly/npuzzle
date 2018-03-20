@@ -45,10 +45,14 @@ func (pq *PriorityQueue) Pop() interface{} {
 	return state
 }
 
+func getNewState(index, indexToMove int, currentState *State, chanState chan<- State) {
+	// calculer nouveaux states
+}
+
 func play(e Env) {
 	getFinalState(&e)
-	i := getIndexToMove(e.initState)
-	fmt.Println(i)
+	indexToMove := getIndexToMove(e.initState)
+	fmt.Println(indexToMove)
 	pq := make(PriorityQueue, 1)
 	pq[0] = &State{
 		board:    e.initState,
@@ -64,4 +68,15 @@ func play(e Env) {
 	// heap.Push(&pq, new)
 	// heuristic := heuristic(e, new)
 	// fmt.Println(heuristic)
+
+	chanState := make(chan State)
+	for i := 0; i < 4; i++ {
+		go getNewState(i, indexToMove, pq[0], chanState)
+	}
+
+	for i := 0; i < 4; i++ {
+		state := <-chanState
+		fmt.Println(state)
+		// mettre dans openlist
+	}
 }
