@@ -30,6 +30,8 @@ func main() {
 	e.initState = tab
 	e.boardSize = size
 	e.heuristic = 1
-	fmt.Println(tab)
-	play(e)
+	lastState := play(e)
+	if lastState != nil {
+		fmt.Println(lastState.board)
+	}
 }

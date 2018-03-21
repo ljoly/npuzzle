@@ -11,12 +11,50 @@ func printError(err string) {
 	os.Exit(0)
 }
 
+func printState(e Env, state State) {
+	fmt.Println("State Index : ", state.index)
+	fmt.Println("State Parent : ", state.parent)
+	fmt.Println("State Priority : ", state.priority)
+	if state.board != nil {
+		fmt.Println("State Board : ")
+		for i := 0; i < e.boardSize; i++ {
+			for j := 0; j < e.boardSize; j++ {
+				fmt.Printf("%d\t", state.board[i*e.boardSize+j])
+			}
+			fmt.Print("\n")
+		}
+	} else {
+		fmt.Println("State Board : ", state.board)
+	}
+}
+
 func atoi(str string) int {
 	val, err := strconv.Atoi(str)
 	if err != nil {
 		panic(err)
 	}
 	return val
+}
+
+func findInList(state *State, queue PriorityQueue) int {
+	for i := range queue {
+		if queue[i] == state {
+			return i
+		}
+	}
+	return -1
+}
+
+func initList(e Env) PriorityQueue {
+	list := make(PriorityQueue, 1)
+	list[0] = &State{
+		board:    e.initState,
+		priority: -1,
+		index:    0,
+		parent:   nil,
+	}
+	// heap.Init(&list)
+	return list
 }
 
 func getIndexToMove(state []int) int {
