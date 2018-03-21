@@ -15,7 +15,8 @@ func getXYfromIndex(index int, e Env) (int, int) {
 	return x, y
 }
 
-func getNewState(e Env, index, indexToMove int, currentState *State, chanState chan<- State) {
+func getNewState(e Env, index, indexToMove int, currentState State, chanState chan<- State) {
+	// fmt.Println("Start : ", currentState)
 	new := &State{
 		board:    nil,
 		priority: -1,
@@ -26,6 +27,7 @@ func getNewState(e Env, index, indexToMove int, currentState *State, chanState c
 	copy(board, currentState.board)
 	x, y := getXYfromIndex(indexToMove, e)
 
+	// fmt.Println(indexToMove, x, y)
 	switch {
 	case index == 0 && y-1 >= 0:
 		passed = swapTiles(indexToMove, indexToMove-1, board, e)
@@ -40,8 +42,9 @@ func getNewState(e Env, index, indexToMove int, currentState *State, chanState c
 		chanState <- *new
 	} else {
 		new.board = board
-		new.parent = currentState
+		new.parent = &currentState
 		new.priority = heuristic(e, new)
 		chanState <- *new
 	}
+	// fmt.Println("End : ", currentState)
 }

@@ -2,6 +2,7 @@ package main
 
 import (
 	"container/heap"
+	"fmt"
 	"sort"
 )
 
@@ -46,21 +47,29 @@ func (pq *PriorityQueue) Pop() interface{} {
 
 func play(e Env) *State {
 	getFinalState(&e)
-	indexToMove := getIndexToMove(e.initState)
 	openList := initList(e)
 	closedList := initList(e)
 	chanState := make(chan State)
-	for i := 0; i < 5; i++ {
+	for {
+		indexToMove := getIndexToMove(openList[0].board)
 		for i := 0; i < 4; i++ {
-			go getNewState(e, i, indexToMove, openList[0], chanState)
+			go getNewState(e, i, indexToMove, *openList[0], chanState)
 		}
+		// fmt.Println("--------- CURRENT STATE : -----------")
+		// printState(e, *openList[0])
+		// fmt.Println("--------- NEIGHBOURS : -----------")
+
 		for i := 0; i < 4; i++ {
 			ngbState := <-chanState
+			// fmt.Println("OK : ", openList[0])
 			//check if the state exists && if it is not in the closed list
 			if ngbState.board != nil && findInList(&ngbState, closedList) == -1 {
 				//check if the state is in the open list
+				// printState(e, ngbState)
 				index := findInList(&ngbState, openList)
+				fmt.Println(index)
 				if index != -1 {
+					fmt.Println("COUCOU")
 					//modify priority if it is higher (== worse) in the open list
 					if openList[index].priority > ngbState.priority {
 						openList[index].priority = ngbState.priority
@@ -74,11 +83,13 @@ func play(e Env) *State {
 			}
 		}
 		if len(openList) > 0 {
-			//sort the open list
+			// fmt.Println("--------- OPEN LIST BEFORE SORT : -----------")
+			// sort the open list
 			// for i := 0; i < len(openList); i++ {
 			// 	fmt.Println("BEFORE_SORT: ", openList[i].priority)
 			// }
 			sort.Sort(&openList)
+			// fmt.Println("--------- OPEN LIST AFTER SORT : -----------")
 			// for i := 0; i < len(openList); i++ {
 			// 	fmt.Println("AFTER_SORT: ", openList[i].priority)
 			// }
@@ -91,7 +102,9 @@ func play(e Env) *State {
 			// 	fmt.Println(closedList[i])
 			// }
 			//check if the puzzle is solved
-			printState(e, *bestState)
+			// fmt.Println("AFTER ->")
+			// printState(e, *bestState)
+			fmt.Println(bestState.priority)
 			if bestState.priority == 0 {
 				return bestState
 			}
