@@ -67,9 +67,7 @@ func play(e Env) *State {
 				//check if the state is in the open list
 				// printState(e, ngbState)
 				index := findInList(&ngbState, openList)
-				fmt.Println(index)
 				if index != -1 {
-					fmt.Println("COUCOU")
 					//modify priority if it is higher (== worse) in the open list
 					if openList[index].priority > ngbState.priority {
 						openList[index].priority = ngbState.priority

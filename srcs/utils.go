@@ -37,18 +37,18 @@ func atoi(str string) int {
 }
 
 func findInList(state *State, queue PriorityQueue) int {
-	// var ez int
-	// for i := range queue {
-	// 	for j := 0; j < 9; j++ {
-	// 		if queue[i].board[j] == state.board[j] {
-	// 			ez++
-	// 		}
-	// 	}
-	// 	if ez == len(queue[i].board) {
-	// 		return i
-	// 	}
-	// }
-	return 0
+	var ez int
+	for i := range queue {
+		for j := 0; j < 9; j++ {
+			if queue[i].board[j] == state.board[j] {
+				ez++
+			}
+		}
+		if ez == len(queue[i].board) {
+			return i
+		}
+	}
+	return -1
 }
 
 func initList(e Env) PriorityQueue {
@@ -64,7 +64,6 @@ func initList(e Env) PriorityQueue {
 }
 
 func getIndexToMove(state []int) int {
-	fmt.Println("bITE")
 	for i := 0; i < len(state); i++ {
 		if state[i] == 0 {
 			return i
