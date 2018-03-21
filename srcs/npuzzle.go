@@ -20,7 +20,7 @@ func (pq PriorityQueue) Len() int { return len(pq) }
 
 func (pq PriorityQueue) Less(i, j int) bool {
 	// We want the lowest priority so we use smaller than here.
-	return pq[i].priority < pq[j].priority
+	return pq[i].priority > pq[j].priority
 }
 
 func (pq PriorityQueue) Swap(i, j int) {
@@ -106,6 +106,9 @@ func play(e Env) *State {
 			if bestState.priority == 0 {
 				return bestState
 			}
+		}
+		if len(openList) == 0 {
+			break
 		}
 	}
 	// all states were reviewed

@@ -39,7 +39,8 @@ func atoi(str string) int {
 func findInList(state *State, queue PriorityQueue) int {
 	var ez int
 	for i := range queue {
-		for j := 0; j < 9; j++ {
+		ez = 0
+		for j := range state.board {
 			if queue[i].board[j] == state.board[j] {
 				ez++
 			}
