@@ -27,11 +27,12 @@ func checkBoard(board []int) {
 	}
 }
 
+// /!\ careful with abnormal characters after board
 func parseFile(file string) ([]int, int) {
-	var size, x = 0, 0
+	var size, x int
 	var board []int
 	var lines = strings.Split(file, "\n")
-	for i := 0; i < len(lines)-1; i++ {
+	for i := 0; i < len(lines); i++ {
 		if lines[i] != "" && lines[i][0] != '#' {
 			var line = strings.Fields(lines[i])
 			if len(line) == 1 || size == 0 {
@@ -52,6 +53,9 @@ func parseFile(file string) ([]int, int) {
 				}
 			} else {
 				printError("Error in file")
+			}
+			if x >= size {
+				break
 			}
 		}
 	}

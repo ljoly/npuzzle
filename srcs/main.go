@@ -28,8 +28,8 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(string(e.file))
 	tab, size := parseFile(string(e.file))
+	// fmt.Println(tab)
 	e.initState = tab
 	e.boardSize = size
 	e.heuristic = 1
@@ -37,7 +37,7 @@ func main() {
 	if lastState != nil {
 		fmt.Println(lastState.board)
 	}
-	fmt.Println("States selected in the openList: ", e.timeComplexity)
-	fmt.Println("Maximum number of states in memory: ", e.sizeComplexity)
-	fmt.Println("Number of moves: ", e.moves)
+	// fmt.Println("States selected in the openList: ", e.timeComplexity)
+	// fmt.Println("Maximum number of states in memory: ", e.sizeComplexity)
+	// fmt.Println("Number of moves: ", e.moves)
 }
