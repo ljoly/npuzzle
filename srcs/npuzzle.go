@@ -80,7 +80,6 @@ func play(e *Env) *State {
 				} else {
 					//push neighbour to open list
 					heap.Push(&openList, &ngbState)
-					fmt.Println("time: ", e.timeComplexity)
 					// fmt.Println("ngbState: ", ngbState)
 				}
 			}

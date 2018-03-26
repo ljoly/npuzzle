@@ -14,7 +14,7 @@ func getSize(line []string) (int, []int) {
 }
 
 func check_board(board []int) {
-	var zeros int = 0
+	var zeros int
 	for i := 0; i < len(board); i++ {
 		if board[i] == 0 {
 			zeros++
@@ -30,7 +30,7 @@ func parseFile(file string) ([]int, int) {
 	var board []int
 	var lines = strings.Split(file, "\n")
 	for i := 0; i < len(lines)-1; i++ {
-		if lines[i][0] != '#' {
+		if lines[i] != "" && lines[i][0] != '#' {
 			var line = strings.Fields(lines[i])
 			if len(line) == 1 || size == 0 {
 				size, board = getSize(line)
