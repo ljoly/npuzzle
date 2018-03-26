@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"strings"
 )
 
@@ -13,7 +14,7 @@ func getSize(line []string) (int, []int) {
 	return size, board
 }
 
-func check_board(board []int) {
+func checkBoard(board []int) {
 	var zeros int
 	for i := 0; i < len(board); i++ {
 		if board[i] == 0 {
@@ -21,6 +22,7 @@ func check_board(board []int) {
 		}
 	}
 	if zeros > 1 {
+		fmt.Println(zeros)
 		printError("Letters instead of numbers")
 	}
 }
@@ -53,6 +55,6 @@ func parseFile(file string) ([]int, int) {
 			}
 		}
 	}
-	check_board(board)
+	checkBoard(board)
 	return board, size
 }
