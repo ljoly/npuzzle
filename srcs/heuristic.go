@@ -8,28 +8,27 @@ func abs(val int) int {
 }
 
 func distance(actual, final []int, index int, e Env) int {
-	var piece int
-	var x_act, y_act, x_final, y_final, distance int
+	var piece, xAct, yAct, xFinal, yFinal, distance int
 	piece = actual[index]
-	x_act = index / e.boardSize
-	y_act = index % e.boardSize
+	xAct = index / e.boardSize
+	yAct = index % e.boardSize
 	for i := 0; i < e.boardSize*e.boardSize; i++ {
 		if final[i] == piece {
-			x_final = i / e.boardSize
-			y_final = i % e.boardSize
+			xFinal = i / e.boardSize
+			yFinal = i % e.boardSize
 			break
 		}
 	}
-	distance = abs(x_final-x_act) + abs(y_final-y_act)
+	distance = abs(xFinal-xAct) + abs(yFinal-yAct)
 	return distance
 }
 
 func manhattan(e Env, state *State) int {
-	var heristic int = 0
+	var heuristic int
 	for i := 0; i < len(state.board); i++ {
-		heristic += distance(state.board, e.finalState, i, e)
+		heuristic += distance(state.board, e.finalState, i, e)
 	}
-	return heristic
+	return heuristic
 }
 
 func heuristic(e Env, state *State) int {

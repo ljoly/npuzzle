@@ -7,11 +7,14 @@ import (
 )
 
 type Env struct {
-	initState  []int
-	finalState []int
-	file       string
-	boardSize  int
-	heuristic  int
+	initState      []int
+	finalState     []int
+	file           string
+	boardSize      int
+	heuristic      int
+	timeComplexity int
+	sizeComplexity int
+	moves          int
 }
 
 func main() {
@@ -30,8 +33,11 @@ func main() {
 	e.initState = tab
 	e.boardSize = size
 	e.heuristic = 1
-	lastState := play(e)
+	lastState := play(&e)
 	if lastState != nil {
 		fmt.Println(lastState.board)
 	}
+	fmt.Println("States selected in the openList: ", e.timeComplexity)
+	fmt.Println("Maximum number of states in memory: ", e.sizeComplexity)
+	fmt.Println("Number of moves: ", e.moves)
 }

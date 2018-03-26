@@ -45,15 +45,18 @@ func (pq *PriorityQueue) Pop() interface{} {
 	return state
 }
 
-func play(e Env) *State {
-	getFinalState(&e)
-	openList := initList(e)
-	closedList := initList(e)
+func play(e *Env) *State {
+	getFinalState(e)
+	openList := initList(*e)
+	closedList := initList(*e)
 	chanState := make(chan State)
 	for {
+		if len(openList) > e.sizeComplexity {
+			e.sizeComplexity = len(closedList)
+		}
 		indexToMove := getIndexToMove(openList[0].board)
 		for i := 0; i < 4; i++ {
-			go getNewState(e, i, indexToMove, *openList[0], chanState)
+			go getNewState(*e, i, indexToMove, *openList[0], chanState)
 		}
 		// fmt.Println("--------- CURRENT STATE : -----------")
 		// printState(e, *openList[0])
@@ -64,6 +67,7 @@ func play(e Env) *State {
 			// fmt.Println("OK : ", openList[0])
 			//check if the state exists && if it is not in the closed list
 			if ngbState.board != nil && findInList(&ngbState, closedList) == -1 {
+				e.timeComplexity++
 				//check if the state is in the open list
 				// printState(e, ngbState)
 				index := findInList(&ngbState, openList)
@@ -76,6 +80,7 @@ func play(e Env) *State {
 				} else {
 					//push neighbour to open list
 					heap.Push(&openList, &ngbState)
+					fmt.Println("time: ", e.timeComplexity)
 					// fmt.Println("ngbState: ", ngbState)
 				}
 			}
@@ -104,6 +109,7 @@ func play(e Env) *State {
 			// printState(e, *bestState)
 			fmt.Println(bestState.priority)
 			if bestState.priority == 0 {
+				e.moves = len(closedList)
 				return bestState
 			}
 		}
