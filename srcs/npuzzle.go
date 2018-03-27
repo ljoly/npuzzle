@@ -70,6 +70,8 @@ func play(e *Env) *State {
 					//modify priority if it is higher (== worse) in the open list
 					if openList[index].priority > ngbState.priority {
 						openList[index].priority = ngbState.priority
+						openList[index].heuristic = ngbState.heuristic
+						openList[index].iteration = ngbState.iteration
 						openList[index].parent = &ngbState
 					}
 				} else {
@@ -87,7 +89,7 @@ func play(e *Env) *State {
 		heap.Remove(&openList, 0)
 		//check if the puzzle is solved
 		fmt.Println(bestState.priority)
-		if bestState.priority == 0 {
+		if sameArrays(bestState.board, e.finalState) {
 			// e.moves = len(closedList)
 			return bestState
 		}
