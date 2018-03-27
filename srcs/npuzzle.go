@@ -3,6 +3,7 @@ package main
 import (
 	"container/heap"
 	"fmt"
+	"reflect"
 	"sort"
 )
 
@@ -48,12 +49,12 @@ func (pq *PriorityQueue) Pop() interface{} {
 func play(e *Env) *State {
 	getFinalState(e)
 	openList := initList(*e)
+	if reflect.DeepEqual(e.initState, e.finalState) {
+		return openList[0]
+	}
 	closedList := initList(*e)
 	chanState := make(chan State)
 	for {
-		if len(openList) > e.sizeComplexity {
-			e.sizeComplexity = len(closedList)
-		}
 		indexToMove := getIndexToMove(openList[0].board)
 		for i := 0; i < 4; i++ {
 			go getNewState(*e, i, indexToMove, *openList[0], chanState)
@@ -67,7 +68,6 @@ func play(e *Env) *State {
 			// fmt.Println("OK : ", openList[0])
 			//check if the state exists && if it is not in the closed list
 			if ngbState.board != nil && findInList(&ngbState, closedList) == -1 {
-				e.timeComplexity++
 				//check if the state is in the open list
 				// printState(e, ngbState)
 				index := findInList(&ngbState, openList)
@@ -108,11 +108,12 @@ func play(e *Env) *State {
 			// printState(e, *bestState)
 			fmt.Println(bestState.priority)
 			if bestState.priority == 0 {
-				e.moves = len(closedList)
+				// e.moves = len(closedList)
 				return bestState
 			}
 		}
 		if len(openList) == 0 {
+			fmt.Println("LOL")
 			break
 		}
 	}
