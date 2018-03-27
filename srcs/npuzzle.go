@@ -3,7 +3,6 @@ package main
 import (
 	"container/heap"
 	"fmt"
-	"reflect"
 	"sort"
 )
 
@@ -48,10 +47,10 @@ func (pq *PriorityQueue) Pop() interface{} {
 
 func play(e *Env) *State {
 	getFinalState(e)
-	openList := initList(*e)
-	if reflect.DeepEqual(e.initState, e.finalState) {
-		return openList[0]
+	if sameArrays(e.initState, e.finalState) {
+		return initList(*e)[0]
 	}
+	openList := initList(*e)
 	closedList := initList(*e)
 	chanState := make(chan State)
 	for {

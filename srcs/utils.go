@@ -36,16 +36,22 @@ func atoi(str string) int {
 	return val
 }
 
-func findInList(state *State, queue PriorityQueue) int {
-	var ez int
-	for i := range queue {
-		ez = 0
-		for j := range state.board {
-			if queue[i].board[j] == state.board[j] {
-				ez++
-			}
+func sameArrays(tab1, tab2 []int) bool {
+	var count int
+	for i := range tab1 {
+		if tab1[i] == tab2[i] {
+			count++
 		}
-		if ez == len(queue[i].board) {
+	}
+	if count == len(tab2) {
+		return true
+	}
+	return false
+}
+
+func findInList(state *State, queue PriorityQueue) int {
+	for i := range queue {
+		if sameArrays(queue[i].board, state.board) {
 			return i
 		}
 	}
