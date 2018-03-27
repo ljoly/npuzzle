@@ -83,11 +83,10 @@ func play(e *Env) *State {
 		}
 		//sort the open list
 		sort.Sort(&openList)
-		bestState = openList[0]
+		//remove the best state from the open list
+		bestState = heap.Pop(&openList).(*State)
 		//push the best state in the closed list
 		heap.Push(&closedList, bestState)
-		//remove the best state from the open list
-		heap.Remove(&openList, 0)
 		//check if the puzzle is solved
 		fmt.Println(bestState.priority)
 		if sameArrays(bestState.board, e.finalState) {
