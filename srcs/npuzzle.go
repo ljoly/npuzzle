@@ -22,7 +22,7 @@ func (pq PriorityQueue) Len() int { return len(pq) }
 
 func (pq PriorityQueue) Less(i, j int) bool {
 	// We want the lowest priority so we use smaller than here.
-	return pq[i].priority > pq[j].priority
+	return pq[i].priority < pq[j].priority
 }
 
 func (pq PriorityQueue) Swap(i, j int) {
@@ -47,20 +47,42 @@ func (pq *PriorityQueue) Pop() interface{} {
 	return state
 }
 
+func getStates(bestState *State, e *Env, chanState chan<- State) {
+	indexToMove := getIndexToMove(bestState.board)
+	for i := 0; i < 4; i++ {
+		go getNewState(*e, i, indexToMove, *bestState, chanState)
+	}
+}
+
 func play(e *Env) *State {
+	var (
+		openList   PriorityQueue
+		closedList PriorityQueue
+	)
 	getFinalState(e)
 	if sameArrays(e.initState, e.finalState) {
 		return initList(*e)[0]
 	}
-	openList := initList(*e)
-	closedList := initList(*e)
+	// openList := initList(*e)
+	// closedList := initList(*e)
 	chanState := make(chan State)
-	bestState := openList[0]
-	for len(openList) > 0 {
-		indexToMove := getIndexToMove(bestState.board)
-		for i := 0; i < 4; i++ {
-			go getNewState(*e, i, indexToMove, *bestState, chanState)
+	bestState := &State{board: e.initState, priority: -1, index: 0, iteration: 0, parent: nil, heuristic: -1}
+	// bestState.heuristic = heuristic(*e, bestState)
+	// bestState.priority = bestState.heuristic
+	heap.Push(&openList, bestState)
+	// for openList.Len() > 0 {
+	for openList.Len() > 0 {
+		//sort the open list
+		sort.Sort(&openList)
+		//remove the best state from the open list
+		bestState = heap.Pop(&openList).(*State)
+		if sameArrays(bestState.board, e.finalState) || bestState.heuristic == 0 {
+			// e.moves = len(closedList)
+			return bestState
 		}
+
+		go getStates(bestState, e, chanState)
+
 		for i := 0; i < 4; i++ {
 			ngbState := <-chanState
 			//check if the state exists && if it is not in the closed list
@@ -81,18 +103,10 @@ func play(e *Env) *State {
 				}
 			}
 		}
-		//sort the open list
-		sort.Sort(&openList)
-		//remove the best state from the open list
-		bestState = heap.Pop(&openList).(*State)
 		//push the best state in the closed list
 		heap.Push(&closedList, bestState)
 		//check if the puzzle is solved
-		fmt.Println(bestState.priority)
-		if sameArrays(bestState.board, e.finalState) {
-			// e.moves = len(closedList)
-			return bestState
-		}
+
 	}
 	// all states were reviewed
 	fmt.Println("No Answer")

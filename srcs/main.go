@@ -36,6 +36,8 @@ func main() {
 	lastState := play(&e)
 	if lastState != nil {
 		fmt.Println(lastState.board)
+	} else {
+		fmt.Println("NOOB")
 	}
 	// fmt.Println("States selected in the openList: ", e.timeComplexity)
 	// fmt.Println("Maximum number of states in memory: ", e.sizeComplexity)
