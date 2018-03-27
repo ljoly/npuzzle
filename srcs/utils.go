@@ -61,10 +61,11 @@ func findInList(state *State, queue PriorityQueue) int {
 func initList(e Env) PriorityQueue {
 	list := make(PriorityQueue, 1)
 	list[0] = &State{
-		board:    e.initState,
-		priority: -1,
-		index:    0,
-		parent:   nil,
+		board:     e.initState,
+		priority:  -1,
+		index:     0,
+		iteration: 0,
+		parent:    nil,
 	}
 	// heap.Init(&list)
 	return list

@@ -43,7 +43,9 @@ func getNewState(e Env, index, indexToMove int, currentState State, chanState ch
 	} else {
 		new.board = board
 		new.parent = &currentState
-		new.priority = heuristic(e, new)
+		new.iteration = currentState.iteration + 1
+		new.heuristic = heuristic(e, new)
+		new.priority = new.heuristic + new.iteration
 		chanState <- *new
 	}
 	// fmt.Println("End : ", currentState)

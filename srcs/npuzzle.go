@@ -10,8 +10,10 @@ type State struct {
 	board    []int // The value of the item; arbitrary.
 	priority int   // The priority of the item in the queue.
 	// The index is needed by update and is maintained by the heap.Interface methods.
-	index  int // The index of the item in the heap.
-	parent *State
+	index     int // The index of the item in the heap.
+	iteration int
+	heuristic int
+	parent    *State
 }
 
 type PriorityQueue []*State
@@ -53,22 +55,16 @@ func play(e *Env) *State {
 	openList := initList(*e)
 	closedList := initList(*e)
 	chanState := make(chan State)
-	for {
+	for len(openList) > 0 {
 		indexToMove := getIndexToMove(openList[0].board)
 		for i := 0; i < 4; i++ {
 			go getNewState(*e, i, indexToMove, *openList[0], chanState)
 		}
-		// fmt.Println("--------- CURRENT STATE : -----------")
-		// printState(e, *openList[0])
-		// fmt.Println("--------- NEIGHBOURS : -----------")
-
 		for i := 0; i < 4; i++ {
 			ngbState := <-chanState
-			// fmt.Println("OK : ", openList[0])
 			//check if the state exists && if it is not in the closed list
 			if ngbState.board != nil && findInList(&ngbState, closedList) == -1 {
 				//check if the state is in the open list
-				// printState(e, ngbState)
 				index := findInList(&ngbState, openList)
 				if index != -1 {
 					//modify priority if it is higher (== worse) in the open list
@@ -79,43 +75,24 @@ func play(e *Env) *State {
 				} else {
 					//push neighbour to open list
 					heap.Push(&openList, &ngbState)
-					// fmt.Println("ngbState: ", ngbState)
 				}
 			}
 		}
-		if len(openList) > 0 {
-			// fmt.Println("--------- OPEN LIST BEFORE SORT : -----------")
-			// sort the open list
-			// for i := 0; i < len(openList); i++ {
-			// 	fmt.Println("BEFORE_SORT: ", openList[i].priority)
-			// }
-			sort.Sort(&openList)
-			// fmt.Println("--------- OPEN LIST AFTER SORT : -----------")
-			// for i := 0; i < len(openList); i++ {
-			// 	fmt.Println("AFTER_SORT: ", openList[i].priority)
-			// }
-			bestState := openList[0]
-			//push the best state in the closed list
-			heap.Push(&closedList, bestState)
-			//remove the best state from the open list
-			heap.Remove(&openList, 0)
-			// for i := 0; i < len(closedList); i++ {
-			// 	fmt.Println(closedList[i])
-			// }
-			//check if the puzzle is solved
-			// fmt.Println("AFTER ->")
-			// printState(e, *bestState)
-			fmt.Println(bestState.priority)
-			if bestState.priority == 0 {
-				// e.moves = len(closedList)
-				return bestState
-			}
-		}
-		if len(openList) == 0 {
-			fmt.Println("LOL")
-			break
+		//sort the open list
+		sort.Sort(&openList)
+		bestState := openList[0]
+		//push the best state in the closed list
+		heap.Push(&closedList, bestState)
+		//remove the best state from the open list
+		heap.Remove(&openList, 0)
+		//check if the puzzle is solved
+		fmt.Println(bestState.priority)
+		if bestState.priority == 0 {
+			// e.moves = len(closedList)
+			return bestState
 		}
 	}
 	// all states were reviewed
+	fmt.Println("No Answer")
 	return nil
 }
