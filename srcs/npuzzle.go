@@ -55,10 +55,11 @@ func play(e *Env) *State {
 	openList := initList(*e)
 	closedList := initList(*e)
 	chanState := make(chan State)
+	bestState := openList[0]
 	for len(openList) > 0 {
-		indexToMove := getIndexToMove(openList[0].board)
+		indexToMove := getIndexToMove(bestState.board)
 		for i := 0; i < 4; i++ {
-			go getNewState(*e, i, indexToMove, *openList[0], chanState)
+			go getNewState(*e, i, indexToMove, *bestState, chanState)
 		}
 		for i := 0; i < 4; i++ {
 			ngbState := <-chanState
@@ -82,7 +83,7 @@ func play(e *Env) *State {
 		}
 		//sort the open list
 		sort.Sort(&openList)
-		bestState := openList[0]
+		bestState = openList[0]
 		//push the best state in the closed list
 		heap.Push(&closedList, bestState)
 		//remove the best state from the open list
