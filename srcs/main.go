@@ -41,5 +41,5 @@ func main() {
 	play(&e)
 	// fmt.Println("States selected in the openList: ", e.timeComplexity)
 	// fmt.Println("Maximum number of states in memory: ", e.sizeComplexity)
-	// fmt.Println("Number of moves: ", e.moves)
+	fmt.Println("Number of moves: ", e.moves)
 }

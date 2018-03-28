@@ -6,6 +6,16 @@ import (
 	"sort"
 )
 
+func countMoves(closedList PriorityQueue) int {
+	var count int
+	state := closedList[len(closedList)-1]
+	for state.parent != nil {
+		count++
+		state = state.parent
+	}
+	return count
+}
+
 func getStates(bestState *State, e *Env, chanState chan<- State) {
 	indexToMove := getIndexToMove(bestState.board)
 	for i := 0; i < 4; i++ {
@@ -35,7 +45,7 @@ func play(e *Env) {
 		bestState = heap.Pop(&openList).(*State)
 		//check if the puzzle is solved
 		if sameArrays(bestState.board, e.finalState) /*|| bestState.heuristic == 0*/ {
-			// e.moves = len(closedList)
+			e.moves = countMoves(closedList)
 			fmt.Println("Puzzle solved", bestState.board)
 			return
 		}
