@@ -33,12 +33,14 @@ func play(e *Env) {
 		sort.Sort(&openList)
 		//select and remove the best state from the open list
 		bestState = heap.Pop(&openList).(*State)
+		//check if the puzzle is solved
 		if sameArrays(bestState.board, e.finalState) /*|| bestState.heuristic == 0*/ {
 			// e.moves = len(closedList)
 			fmt.Println("Puzzle solved", bestState.board)
 			return
 		}
 
+		//  ----- go routine seems useless, same perfs -----
 		go getStates(bestState, e, chanState)
 
 		for i := 0; i < 4; i++ {
@@ -63,8 +65,6 @@ func play(e *Env) {
 		}
 		//push the best state in the closed list
 		heap.Push(&closedList, bestState)
-		//check if the puzzle is solved
-
 	}
 	// all states were reviewed
 	fmt.Println("No Answer")
