@@ -60,19 +60,6 @@ func findInList(state *State, queue PriorityQueue) int {
 	return -1
 }
 
-func initList(e Env) PriorityQueue {
-	list := make(PriorityQueue, 1)
-	list[0] = &State{
-		board:     e.initState,
-		priority:  -1,
-		index:     0,
-		iteration: 0,
-		parent:    nil,
-	}
-	// heap.Init(&list)
-	return list
-}
-
 func getIndexToMove(state []int) int {
 	for i := 0; i < len(state); i++ {
 		if state[i] == 0 {
