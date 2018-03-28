@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"io/ioutil"
 	"os"
 )
@@ -32,6 +33,11 @@ func main() {
 	e.initState = tab
 	e.boardSize = size
 	e.heuristic = 1
+	getFinalState(&e)
+	if sameArrays(e.initState, e.finalState) {
+		fmt.Println("Puzzle already solved")
+		return
+	}
 	play(&e)
 	// fmt.Println("States selected in the openList: ", e.timeComplexity)
 	// fmt.Println("Maximum number of states in memory: ", e.sizeComplexity)
