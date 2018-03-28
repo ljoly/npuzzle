@@ -54,14 +54,15 @@ func getStates(bestState *State, e *Env, chanState chan<- State) {
 	}
 }
 
-func play(e *Env) *State {
+func play(e *Env) {
 	var (
 		openList   PriorityQueue
 		closedList PriorityQueue
 	)
 	getFinalState(e)
 	if sameArrays(e.initState, e.finalState) {
-		return initList(*e)[0]
+		fmt.Println("Puzzle already solved")
+		return
 	}
 	// openList := initList(*e)
 	// closedList := initList(*e)
@@ -78,7 +79,8 @@ func play(e *Env) *State {
 		bestState = heap.Pop(&openList).(*State)
 		if sameArrays(bestState.board, e.finalState) || bestState.heuristic == 0 {
 			// e.moves = len(closedList)
-			return bestState
+			fmt.Println("Puzzle solved", bestState.board)
+			return
 		}
 
 		go getStates(bestState, e, chanState)
@@ -110,5 +112,4 @@ func play(e *Env) *State {
 	}
 	// all states were reviewed
 	fmt.Println("No Answer")
-	return nil
 }

@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"io/ioutil"
 	"os"
 )
@@ -33,12 +32,7 @@ func main() {
 	e.initState = tab
 	e.boardSize = size
 	e.heuristic = 1
-	lastState := play(&e)
-	if lastState != nil {
-		fmt.Println(lastState.board)
-	} else {
-		fmt.Println("NOOB")
-	}
+	play(&e)
 	// fmt.Println("States selected in the openList: ", e.timeComplexity)
 	// fmt.Println("Maximum number of states in memory: ", e.sizeComplexity)
 	// fmt.Println("Number of moves: ", e.moves)
