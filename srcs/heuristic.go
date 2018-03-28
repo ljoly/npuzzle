@@ -23,20 +23,25 @@ func distance(actual, final []int, index int, e Env) int {
 	return distance
 }
 
-func manhattan(e Env, state *State) int {
-	var heuristic int
+func linearConflict(e Env, state *State) int {
+	var l int
+	return l
+}
+
+func manhattanDistance(e Env, state *State) int {
+	var m int
 	for i := 0; i < len(state.board); i++ {
-		heuristic += distance(state.board, e.finalState, i, e)
+		m += distance(state.board, e.finalState, i, e)
 	}
-	return heuristic
+	return m
 }
 
 func heuristic(e Env, state *State) int {
+	var h int
 	if e.heuristic == 1 {
-		return (manhattan(e, state))
+		h = manhattanDistance(e, state)
+	} else if e.heuristic == 2 {
+		h = manhattanDistance(e, state) + linearConflict(e, state)
 	}
-	if e.heuristic == 1 {
-		return (-1)
-	}
-	return (-1)
+	return (h)
 }
