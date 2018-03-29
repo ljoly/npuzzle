@@ -7,30 +7,46 @@ func abs(val int) int {
 	return (val)
 }
 
-func topConflict(tab []int, index int) {
-	for i := index; i > 0; i-- {
+const (
+	topDir = iota
+	bottomDir
+	leftDir
+	rightDir
+)
+
+func isInRow(final []int, direction int, index int, val int) bool {
+	return false
+}
+
+func topConflict(currentState, final []int, index int) int {
+	var conflict int
+	for i := index; i >= 0; i-- {
+		if isInRow(final, topDir, i, )
 	}
+	return conflict
 }
 
 func linearConflict(e Env, state *State) int {
 	var l int
 	for i := range state.board {
-		// tesst with go routine
+		// test with go routine
 		if state.board[i] != 0 {
-			l += topConflict(state.board, i)
+			if i-e.boardSize >= 0 {
+				l += topConflict(state.board, e.finalState, i)
+			}
+			l += bottomConflict(state.board, i)			
 			l += rightConflict(state.board, i)
-			l += bottomConflict(state.board, i)
 			l += leftConflict(state.board, i)
 		}
 	}
 	return l
 }
 
-func distance(actual, final []int, index int, e Env) int {
-	var piece, xAct, yAct, xFinal, yFinal, distance int
-	piece = actual[index]
-	xAct = index / e.boardSize
-	yAct = index % e.boardSize
+func distance(current, final []int, index int, e Env) int {
+	var piece, xCurr, yCurr, xFinal, yFinal, distance int
+	piece = current[index]
+	xCurr = index / e.boardSize
+	yCurr = index % e.boardSize
 	for i := 0; i < e.boardSize*e.boardSize; i++ {
 		if final[i] == piece {
 			xFinal = i / e.boardSize
@@ -38,7 +54,7 @@ func distance(actual, final []int, index int, e Env) int {
 			break
 		}
 	}
-	distance = abs(xFinal-xAct) + abs(yFinal-yAct)
+	distance = abs(xFinal-xCurr) + abs(yFinal-yCurr)
 	return distance
 }
 
