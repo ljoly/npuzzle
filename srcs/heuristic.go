@@ -7,6 +7,25 @@ func abs(val int) int {
 	return (val)
 }
 
+func topConflict(tab []int, index int) {
+	for i := index; i > 0; i-- {
+	}
+}
+
+func linearConflict(e Env, state *State) int {
+	var l int
+	for i := range state.board {
+		// tesst with go routine
+		if state.board[i] != 0 {
+			l += topConflict(state.board, i)
+			l += rightConflict(state.board, i)
+			l += bottomConflict(state.board, i)
+			l += leftConflict(state.board, i)
+		}
+	}
+	return l
+}
+
 func distance(actual, final []int, index int, e Env) int {
 	var piece, xAct, yAct, xFinal, yFinal, distance int
 	piece = actual[index]
@@ -23,14 +42,10 @@ func distance(actual, final []int, index int, e Env) int {
 	return distance
 }
 
-func linearConflict(e Env, state *State) int {
-	var l int
-	return l
-}
-
 func manhattanDistance(e Env, state *State) int {
 	var m int
 	for i := 0; i < len(state.board); i++ {
+		// test with go routine
 		m += distance(state.board, e.finalState, i, e)
 	}
 	return m
