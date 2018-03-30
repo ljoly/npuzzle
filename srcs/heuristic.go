@@ -12,7 +12,6 @@ const (
 	vertical
 )
 
-<<<<<<< HEAD
 func getIndexInFinalRow(e Env, dir, index int, val int) int {
 	start := index
 	if dir == vertical {
