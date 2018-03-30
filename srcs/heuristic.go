@@ -8,20 +8,70 @@ func abs(val int) int {
 }
 
 const (
-	topDir = iota
-	bottomDir
-	leftDir
-	rightDir
+	horizontal = iota
+	vertical
 )
 
-func isInRow(final []int, direction int, index int, val int) bool {
-	return false
+func getIndexInFinalRow(e Env, dir, index int, val int) int {
+	start := index
+	if dir == vertical {
+		for start >= e.boardSize {
+			start -= e.boardSize
+		}
+		for i := start; i < e.boardSize*e.boardSize; i += e.boardSize {
+			if e.finalState[i] == val {
+				return i
+			}
+		}
+	} else if dir == horizontal {
+		for start%e.boardSize > 0 {
+			start--
+		}
+		for i := start; i < e.boardSize; i++ {
+			if e.finalState[i] == val {
+				return i
+			}
+		}
+	}
+	return -1
 }
 
-func topConflict(currentState, final []int, index int) int {
+func verticalConflict(e Env, currentState []int, index int) int {
 	var conflict int
-	for i := index; i >= 0; i-- {
-		if isInRow(final, topDir, i, )
+	finalIndexOfCurrent := getIndexInFinalRow(e, vertical, index, currentState[index])
+	start := index
+	for start >= e.boardSize {
+		start -= e.boardSize
+	}
+	if finalIndexOfCurrent != -1 {
+		for i := start; i < e.boardSize*e.boardSize; i += e.boardSize {
+			if i != index && currentState[i] != 0 {
+				finalIndexComp := getIndexInFinalRow(e, vertical, i, currentState[i])
+				if finalIndexComp != -1 && (index > i && finalIndexOfCurrent < finalIndexComp) || (index < i && finalIndexOfCurrent > finalIndexComp) {
+					conflict++
+				}
+			}
+		}
+	}
+	return conflict
+}
+
+func horizontalConflict(e Env, currentState []int, index int) int {
+	var conflict int
+	finalIndexOfCurrent := getIndexInFinalRow(e, horizontal, index, currentState[index])
+	start := index
+	for start%e.boardSize > 0 {
+		start--
+	}
+	if finalIndexOfCurrent != -1 {
+		for i := start; i < e.boardSize; i++ {
+			if i != index {
+				finalIndexComp := getIndexInFinalRow(e, vertical, i, currentState[i])
+				if finalIndexComp != -1 && (index > i && finalIndexOfCurrent < finalIndexComp) || (index < i && finalIndexOfCurrent > finalIndexComp) {
+					conflict++
+				}
+			}
+		}
 	}
 	return conflict
 }
@@ -31,12 +81,8 @@ func linearConflict(e Env, state *State) int {
 	for i := range state.board {
 		// test with go routine
 		if state.board[i] != 0 {
-			if i-e.boardSize >= 0 {
-				l += topConflict(state.board, e.finalState, i)
-			}
-			l += bottomConflict(state.board, i)			
-			l += rightConflict(state.board, i)
-			l += leftConflict(state.board, i)
+			l += verticalConflict(e, state.board, i)
+			l += horizontalConflict(e, state.board, i)
 		}
 	}
 	return l
