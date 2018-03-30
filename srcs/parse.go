@@ -14,6 +14,20 @@ func getSize(line []string) (int, []int) {
 	return size, board
 }
 
+func checkSolvability(e Env) {
+	var inv_count = 0
+	for i := 0; i < e.boardSize*e.boardSize; i++ {
+		for j := i + 1; j < e.boardSize*e.boardSize; j++ {
+			if e.initState[i] > e.initState[j] {
+				inv_count++
+			}
+		}
+	}
+	if inv_count%2 == 0 && e.boardSize%2 != 0 || inv_count%2 != 0 && e.boardSize%2 == 0 {
+		printError("Not solvable")
+	}
+}
+
 func checkBoard(board []int) {
 	var zeros int
 	for i := 0; i < len(board); i++ {
@@ -24,6 +38,14 @@ func checkBoard(board []int) {
 	if zeros > 1 {
 		fmt.Println(zeros)
 		printError("Letters instead of numbers")
+	}
+	var count, add int
+	for i := 0; i < len(board); i++ {
+		add += board[i]
+		count += i
+	}
+	if add != count {
+		printError("Wrong numbers")
 	}
 }
 

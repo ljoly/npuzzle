@@ -14,33 +14,33 @@ const (
 	rightDir
 )
 
-func isInRow(final []int, direction int, index int, val int) bool {
-	return false
-}
+// func isInRow(final []int, direction int, index int, val int) bool {
+// 	return false
+// }
 
-func topConflict(currentState, final []int, index int) int {
-	var conflict int
-	for i := index; i >= 0; i-- {
-		if isInRow(final, topDir, i, )
-	}
-	return conflict
-}
+// func topConflict(currentState, final []int, index int) int {
+// 	var conflict int
+// 	for i := index; i >= 0; i-- {
+// 		if isInRow(final, topDir, i, )
+// 	}
+// 	return conflict
+// }
 
-func linearConflict(e Env, state *State) int {
-	var l int
-	for i := range state.board {
-		// test with go routine
-		if state.board[i] != 0 {
-			if i-e.boardSize >= 0 {
-				l += topConflict(state.board, e.finalState, i)
-			}
-			l += bottomConflict(state.board, i)			
-			l += rightConflict(state.board, i)
-			l += leftConflict(state.board, i)
-		}
-	}
-	return l
-}
+// func linearConflict(e Env, state *State) int {
+// 	var l int
+// 	for i := range state.board {
+// 		// test with go routine
+// 		if state.board[i] != 0 {
+// 			if i-e.boardSize >= 0 {
+// 				l += topConflict(state.board, e.finalState, i)
+// 			}
+// 			l += bottomConflict(state.board, i)
+// 			l += rightConflict(state.board, i)
+// 			l += leftConflict(state.board, i)
+// 		}
+// 	}
+// 	return l
+// }
 
 func distance(current, final []int, index int, e Env) int {
 	var piece, xCurr, yCurr, xFinal, yFinal, distance int
@@ -72,7 +72,7 @@ func heuristic(e Env, state *State) int {
 	if e.heuristic == 1 {
 		h = manhattanDistance(e, state)
 	} else if e.heuristic == 2 {
-		h = manhattanDistance(e, state) + linearConflict(e, state)
+		// h = manhattanDistance(e, state) + linearConflict(e, state)
 	}
 	return (h)
 }
