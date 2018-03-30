@@ -32,7 +32,7 @@ func main() {
 	// fmt.Println(tab)
 	e.initState = tab
 	e.boardSize = size
-	e.heuristic = 1
+	e.heuristic = 2
 	getFinalState(&e)
 	if sameArrays(e.initState, e.finalState) {
 		fmt.Println("Puzzle already solved")

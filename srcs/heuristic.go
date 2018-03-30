@@ -1,5 +1,9 @@
 package main
 
+import (
+	"fmt"
+)
+
 func abs(val int) int {
 	if val < 0 {
 		return (val * (-1))
@@ -65,7 +69,7 @@ func horizontalConflict(e Env, currentState []int, index int) int {
 	}
 	if finalIndexOfCurrent != -1 {
 		for i := start; i < e.boardSize; i++ {
-			if i != index {
+			if i != index && currentState[i] != 0 {
 				finalIndexComp := getIndexInFinalRow(e, vertical, i, currentState[i])
 				if finalIndexComp != -1 && (index > i && finalIndexOfCurrent < finalIndexComp) || (index < i && finalIndexOfCurrent > finalIndexComp) {
 					conflict++
@@ -118,7 +122,10 @@ func heuristic(e Env, state *State) int {
 	if e.heuristic == 1 {
 		h = manhattanDistance(e, state)
 	} else if e.heuristic == 2 {
-		// h = manhattanDistance(e, state) + linearConflict(e, state)
+		h = manhattanDistance(e, state)
+		fmt.Println("MANHATTAN", h)
+		h += linearConflict(e, state)
+		fmt.Println("MANHATTAN + LC", h)
 	}
 	return (h)
 }
