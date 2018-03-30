@@ -12,6 +12,7 @@ const (
 	vertical
 )
 
+<<<<<<< HEAD
 func getIndexInFinalRow(e Env, dir, index int, val int) int {
 	start := index
 	if dir == vertical {
@@ -118,7 +119,7 @@ func heuristic(e Env, state *State) int {
 	if e.heuristic == 1 {
 		h = manhattanDistance(e, state)
 	} else if e.heuristic == 2 {
-		h = manhattanDistance(e, state) + linearConflict(e, state)
+		// h = manhattanDistance(e, state) + linearConflict(e, state)
 	}
 	return (h)
 }

@@ -24,10 +24,10 @@ func main() {
 	}
 	e := Env{}
 	file, err := ioutil.ReadFile(arg[0])
-	e.file = string(file)
 	if err != nil {
 		panic(err)
 	}
+	e.file = string(file)
 	tab, size := parseFile(string(e.file))
 	// fmt.Println(tab)
 	e.initState = tab
@@ -38,6 +38,7 @@ func main() {
 		fmt.Println("Puzzle already solved")
 		return
 	}
+	checkSolvability(e)
 	play(&e)
 	// fmt.Println("States selected in the openList: ", e.timeComplexity)
 	// fmt.Println("Maximum number of states in memory: ", e.sizeComplexity)
