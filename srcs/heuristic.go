@@ -1,9 +1,5 @@
 package main
 
-import (
-	"fmt"
-)
-
 func abs(val int) int {
 	if val < 0 {
 		return (val * (-1))
@@ -31,7 +27,7 @@ func getIndexInFinalRow(e Env, dir, index int, val int) int {
 		for start%e.boardSize > 0 {
 			start--
 		}
-		for i := start; i < e.boardSize; i++ {
+		for i := start; i < start+e.boardSize; i++ {
 			if e.finalState[i] == val {
 				return i
 			}
@@ -43,6 +39,7 @@ func getIndexInFinalRow(e Env, dir, index int, val int) int {
 func verticalConflict(e Env, currentState []int, index int) int {
 	var conflict int
 	finalIndexOfCurrent := getIndexInFinalRow(e, vertical, index, currentState[index])
+	// fmt.Println("final index vertical", finalIndexOfCurrent)
 	start := index
 	for start >= e.boardSize {
 		start -= e.boardSize
@@ -51,32 +48,37 @@ func verticalConflict(e Env, currentState []int, index int) int {
 		for i := start; i < e.boardSize*e.boardSize; i += e.boardSize {
 			if i != index && currentState[i] != 0 {
 				finalIndexComp := getIndexInFinalRow(e, vertical, i, currentState[i])
-				if finalIndexComp != -1 && (index > i && finalIndexOfCurrent < finalIndexComp) || (index < i && finalIndexOfCurrent > finalIndexComp) {
+				// fmt.Println("final index comp", finalIndexComp, i)
+				if finalIndexComp != -1 && ((index > i && finalIndexOfCurrent < finalIndexComp) || (index < i && finalIndexOfCurrent > finalIndexComp)) {
 					conflict++
 				}
 			}
 		}
 	}
+	// fmt.Println("vertical", conflict)
 	return conflict
 }
 
 func horizontalConflict(e Env, currentState []int, index int) int {
 	var conflict int
 	finalIndexOfCurrent := getIndexInFinalRow(e, horizontal, index, currentState[index])
+	// fmt.Println("final index horizontal", finalIndexOfCurrent)
 	start := index
 	for start%e.boardSize > 0 {
 		start--
 	}
 	if finalIndexOfCurrent != -1 {
-		for i := start; i < e.boardSize; i++ {
+		for i := start; i < start+e.boardSize; i++ {
 			if i != index && currentState[i] != 0 {
-				finalIndexComp := getIndexInFinalRow(e, vertical, i, currentState[i])
-				if finalIndexComp != -1 && (index > i && finalIndexOfCurrent < finalIndexComp) || (index < i && finalIndexOfCurrent > finalIndexComp) {
+				finalIndexComp := getIndexInFinalRow(e, horizontal, i, currentState[i])
+				// fmt.Println("final index comp", finalIndexComp, i)
+				if finalIndexComp != -1 && ((index > i && finalIndexOfCurrent < finalIndexComp) || (index < i && finalIndexOfCurrent > finalIndexComp)) {
 					conflict++
 				}
 			}
 		}
 	}
+	// fmt.Println("horizontal", conflict)
 	return conflict
 }
 
@@ -85,10 +87,12 @@ func linearConflict(e Env, state *State) int {
 	for i := range state.board {
 		// test with go routine
 		if state.board[i] != 0 {
+			// fmt.Println("state[", i, "] = ", state.board[i])
 			l += verticalConflict(e, state.board, i)
 			l += horizontalConflict(e, state.board, i)
 		}
 	}
+	// fmt.Println("LC", l)
 	return l
 }
 
@@ -114,6 +118,7 @@ func manhattanDistance(e Env, state *State) int {
 		// test with go routine
 		m += distance(state.board, e.finalState, i, e)
 	}
+	// fmt.Println("MANHATTAN", m)
 	return m
 }
 
@@ -123,9 +128,7 @@ func heuristic(e Env, state *State) int {
 		h = manhattanDistance(e, state)
 	} else if e.heuristic == 2 {
 		h = manhattanDistance(e, state)
-		fmt.Println("MANHATTAN", h)
 		h += linearConflict(e, state)
-		fmt.Println("MANHATTAN + LC", h)
 	}
 	return (h)
 }
