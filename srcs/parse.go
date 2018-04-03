@@ -15,15 +15,15 @@ func getSize(line []string) (int, []int) {
 }
 
 func checkSolvability(e Env) {
-	var inv_count = 0
+	var invCount int
 	for i := 0; i < e.boardSize*e.boardSize; i++ {
 		for j := i + 1; j < e.boardSize*e.boardSize; j++ {
 			if e.initState[i] > e.initState[j] {
-				inv_count++
+				invCount++
 			}
 		}
 	}
-	if inv_count%2 == 0 && e.boardSize%2 != 0 || inv_count%2 != 0 && e.boardSize%2 == 0 {
+	if invCount%2 == 0 && e.boardSize%2 != 0 || invCount%2 != 0 && e.boardSize%2 == 0 {
 		printError("Not solvable")
 	}
 }
