@@ -48,7 +48,7 @@ func play(e *Env) {
 		//check if the puzzle is solved
 		if sameArrays(bestState.board, e.finalState) /*|| bestState.heuristic == 0*/ {
 			e.moves = countMoves(*e, bestState)
-			fmt.Println("Puzzle solved", bestState.board)
+			fmt.Println("Puzzle solved")
 			return
 		}
 
