@@ -14,15 +14,6 @@ func getSize(line []string) (int, []int) {
 	return size, board
 }
 
-func getIndexInFinalState(arr []int, toFind int) int {
-	for i, value := range arr {
-		if value == toFind {
-			return i
-		}
-	}
-	return -1
-}
-
 func checkSolvability(e Env) {
 	var inversion int
 	var solvable bool
@@ -72,7 +63,6 @@ func checkBoard(board []int) {
 	}
 }
 
-// /!\ careful with abnormal characters after board
 func parseFile(file string) ([]int, int) {
 	var size, x int
 	var board []int
