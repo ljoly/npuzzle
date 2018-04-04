@@ -52,8 +52,7 @@ func play(e *Env) {
 			return
 		}
 
-		//  ----- go routine seems useless for 3x3, same perfs -----
-		go getStates(bestState, e, chanState)
+		getStates(bestState, e, chanState)
 
 		for i := 0; i < 4; i++ {
 			childState := <-chanState
