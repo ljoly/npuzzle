@@ -14,17 +14,40 @@ func getSize(line []string) (int, []int) {
 	return size, board
 }
 
+func getIndexInFinalState(arr []int, toFind int) int {
+	for i, value := range arr {
+		if value == toFind {
+			return i
+		}
+	}
+	return -1
+}
+
 func checkSolvability(e Env) {
-	var inv_count = 0
-	for i := 0; i < e.boardSize*e.boardSize; i++ {
-		for j := i + 1; j < e.boardSize*e.boardSize; j++ {
-			if e.initState[i] > e.initState[j] {
-				inv_count++
+	var inversion int
+	var solvable bool
+
+	for i, val := range e.initState {
+		for j := i + 1; j < len(e.initState); j++ {
+			index := getIndexInFinalState(e.finalState, e.initState[j])
+			if val != 0 && e.finalState[index] != 0 && val > e.finalState[index] {
+				inversion++
 			}
 		}
 	}
-	if inv_count%2 == 0 && e.boardSize%2 != 0 || inv_count%2 != 0 && e.boardSize%2 == 0 {
-		printError("Not solvable")
+	if e.boardSize%2 == 0 {
+		_, y := getXYfromIndex(getIndexToMove(e.initState), e)
+		if y%2 != inversion%2 {
+			solvable = true
+		}
+	} else if e.boardSize%2 == 1 {
+		solvable = inversion%2 == 1
+	}
+	if e.boardSize > 5 {
+		solvable = solvable == false
+	}
+	if solvable == false {
+		printError("Puzzle is not solvable")
 	}
 }
 
