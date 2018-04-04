@@ -11,7 +11,6 @@ func countMoves(e Env, state *State) int {
 	printState(e, *state)
 	fmt.Println("INITIAL STATE: ", e.initState)
 	for state != nil {
-		fmt.Println("COUNT = ", count)
 		printState(e, *state)
 		count++
 		state = state.parent
