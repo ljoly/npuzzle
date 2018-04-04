@@ -11,7 +11,6 @@ func countMoves(e Env, state *State) int {
 	printState(e, *state)
 	fmt.Println("INITIAL STATE: ", e.initState)
 	for state != nil {
-		fmt.Println("COUNT = ", count)
 		printState(e, *state)
 		count++
 		state = state.parent
@@ -49,12 +48,11 @@ func play(e *Env) {
 		//check if the puzzle is solved
 		if sameArrays(bestState.board, e.finalState) /*|| bestState.heuristic == 0*/ {
 			e.moves = countMoves(*e, bestState)
-			fmt.Println("Puzzle solved", bestState.board)
+			fmt.Println("Puzzle solved")
 			return
 		}
 
-		//  ----- go routine seems useless for 3x3, same perfs -----
-		go getStates(bestState, e, chanState)
+		getStates(bestState, e, chanState)
 
 		for i := 0; i < 4; i++ {
 			childState := <-chanState
