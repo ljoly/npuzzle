@@ -14,30 +14,30 @@ func getSize(line []string) (int, []int) {
 	return size, board
 }
 
-func checkSolvability(e Env) {
-	var inversion int
-	var solvable bool
+func countInversions(tab []int, e Env) int {
+	var inversions int
 
 	for i, val := range e.initState {
 		for j := i + 1; j < len(e.initState); j++ {
 			index := getIndexInFinalState(e.finalState, e.initState[j])
 			if val != 0 && e.finalState[index] != 0 && val > e.finalState[index] {
-				inversion++
+				inversions++
 			}
 		}
 	}
-	if e.boardSize%2 == 0 {
+	return inversions
+}
+
+func checkSolvability(e Env) {
+	var startInversions = countInversions(e.initState, e)
+	var goalInversions = countInversions(e.finalState, e)
+
+	if e.boardSize%2 == 0 { // In this case, the row of the '0' tile matters
 		_, y := getXYfromIndex(getIndexToMove(e.initState), e)
-		if y%2 != inversion%2 {
-			solvable = true
-		}
-	} else if e.boardSize%2 == 1 {
-		solvable = inversion%2 == 1
+		startInversions += y / e.boardSize
+		goalInversions += y / e.boardSize
 	}
-	if e.boardSize > 5 {
-		solvable = solvable == false
-	}
-	if solvable == false {
+	if startInversions%2 != goalInversions%2 {
 		printError("Puzzle is not solvable")
 	}
 }
