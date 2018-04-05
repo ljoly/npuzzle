@@ -41,8 +41,8 @@ func findInList(state *State, queue PriorityQueue) int {
 	return -1
 }
 
-func getIndexInFinalState(arr []int, toFind int) int {
-	for i, value := range arr {
+func getIndexInFinalState(state []int, toFind int) int {
+	for i, value := range state {
 		if value == toFind {
 			return i
 		}
