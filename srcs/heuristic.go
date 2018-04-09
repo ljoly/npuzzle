@@ -79,15 +79,25 @@ func horizontalConflict(e Env, currentState []int, index int) int {
 	return conflict
 }
 
+func getConflicts(e Env, currentState []int, i int, chanLC chan<- int) {
+	var l int
+	if currentState[i] != 0 {
+		l += verticalConflict(e, currentState, i)
+		l += horizontalConflict(e, currentState, i)
+	}
+	chanLC <- l
+}
+
 func linearConflict(e Env, state *State) int {
 	var l int
+	chanLC := make(chan int)
 	for i := range state.board {
-		// test with go routine
-		if state.board[i] != 0 {
-			l += verticalConflict(e, state.board, i)
-			l += horizontalConflict(e, state.board, i)
-		}
+		go getConflicts(e, state.board, i, chanLC)
 	}
+	for i := 0; i < len(state.board); i++ {
+		l += <-chanLC
+	}
+	close(chanLC)
 	return l
 }
 
@@ -116,6 +126,7 @@ func manhattanDistance(e Env, state *State) int {
 	for i := 0; i < len(state.board); i++ {
 		m += <-chanM
 	}
+	close(chanM)
 	return m
 }
 
@@ -129,5 +140,5 @@ func heuristic(e Env, state *State) int {
 	} else if e.heuristic == 3 {
 		h = misplacedTiles(e, state)
 	}
-	return (h)
+	return h
 }

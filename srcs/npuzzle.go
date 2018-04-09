@@ -49,6 +49,7 @@ func play(e *Env) {
 		if sameArrays(bestState.board, e.finalState) /*|| bestState.heuristic == 0*/ {
 			e.moves = countMoves(*e, bestState)
 			fmt.Println("Puzzle solved")
+			close(chanState)
 			return
 		}
 
