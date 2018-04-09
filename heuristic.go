@@ -132,13 +132,14 @@ func manhattanDistance(e Env, state *State) int {
 
 func heuristic(e Env, state *State) int {
 	var h int
-	if e.heuristic == 1 {
+	switch e.heuristic {
+	case manhattan:
 		h = manhattanDistance(e, state)
-	} else if e.heuristic == 2 {
+	case misplaced:
+		h = misplacedTiles(e, state)
+	case manhattanLC:
 		h = manhattanDistance(e, state)
 		h += linearConflict(e, state)
-	} else if e.heuristic == 3 {
-		h = misplacedTiles(e, state)
 	}
 	return h
 }

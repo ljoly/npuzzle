@@ -36,7 +36,6 @@ func play(e *Env) {
 		//check if the puzzle is solved
 		if sameArrays(bestState.board, e.finalState) /*|| bestState.heuristic == 0*/ {
 			printStates(e, bestState)
-			fmt.Println("Puzzle solved")
 			close(chanState)
 			return
 		}

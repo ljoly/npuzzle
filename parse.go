@@ -1,7 +1,9 @@
 package main
 
 import (
+	"flag"
 	"fmt"
+	"io/ioutil"
 	"strings"
 )
 
@@ -96,4 +98,33 @@ func parseFile(file string) ([]int, int) {
 	}
 	checkBoard(board)
 	return board, size
+}
+
+func parseCommand(e *Env) {
+	flagFile := flag.String("f", "", "")
+	flagH := flag.String("heuristic", "", "")
+	flagGreed := flag.Bool("greed", false, "")
+	flag.Parse()
+
+	file, err := ioutil.ReadFile(*flagFile)
+	if err != nil {
+		msg := "Not a valid file or flag -f is missing"
+		printError(msg)
+	}
+	e.file = string(file)
+
+	// default heuristic: ManhattanDistance + LinearConflict
+	e.heuristic = manhattanLC
+	switch {
+	case *flagH == "M":
+		e.heuristic = manhattan
+	case *flagH == "MT":
+		e.heuristic = misplaced
+	case *flagH == "MLC":
+		e.heuristic = manhattanLC
+	}
+
+	if *flagGreed {
+		e.greedySearch = true
+	}
 }
