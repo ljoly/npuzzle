@@ -10,13 +10,7 @@ func printError(err string) {
 	os.Exit(0)
 }
 
-func printState(e Env, state State) {
-	fmt.Println("State Priority : ", state.priority)
-	fmt.Println("State Index : ", state.index)
-	fmt.Println("State Iteration : ", state.iteration)
-	fmt.Println("State Heuristic : ", state.heuristic)
-	fmt.Println("State Parent : ", state.parent)
-	fmt.Println("State Board: ")
+func printBoard(e Env, state State) {
 	if state.board != nil {
 		for i := 0; i < e.boardSize; i++ {
 			for j := 0; j < e.boardSize; j++ {
@@ -28,4 +22,13 @@ func printState(e Env, state State) {
 		fmt.Println("State Board : ", state.board)
 	}
 	fmt.Println("")
+}
+
+func printStates(e *Env, state *State) {
+	if state != nil {
+		printStates(e, state.parent)
+		fmt.Println("State", e.moves)
+		printBoard(*e, *state)
+		e.moves++
+	}
 }

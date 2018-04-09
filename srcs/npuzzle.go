@@ -6,18 +6,6 @@ import (
 	"sort"
 )
 
-func countMoves(e Env, state *State) int {
-	var count int
-	printState(e, *state)
-	fmt.Println("INITIAL STATE: ", e.initState)
-	for state != nil {
-		printState(e, *state)
-		count++
-		state = state.parent
-	}
-	return count
-}
-
 func getStates(bestState *State, e *Env, chanState chan<- State) {
 	indexToMove := getIndexToMove(bestState.board)
 	for i := 0; i < 4; i++ {
@@ -47,7 +35,7 @@ func play(e *Env) {
 		bestState = heap.Pop(&openList).(*State)
 		//check if the puzzle is solved
 		if sameArrays(bestState.board, e.finalState) /*|| bestState.heuristic == 0*/ {
-			e.moves = countMoves(*e, bestState)
+			printStates(e, bestState)
 			fmt.Println("Puzzle solved")
 			close(chanState)
 			return
