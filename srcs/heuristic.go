@@ -90,7 +90,7 @@ func getConflicts(e Env, currentState []int, i int, chanLC chan<- int) {
 
 func linearConflict(e Env, state *State) int {
 	var l int
-	chanLC := make(chan int)
+	chanLC := make(chan int, e.boardSize)
 	for i := range state.board {
 		go getConflicts(e, state.board, i, chanLC)
 	}
@@ -119,7 +119,7 @@ func getDistance(current, final []int, index int, e Env, chanM chan<- int) {
 
 func manhattanDistance(e Env, state *State) int {
 	var m int
-	chanM := make(chan int)
+	chanM := make(chan int, e.boardSize)
 	for i := 0; i < len(state.board); i++ {
 		go getDistance(state.board, e.finalState, i, e, chanM)
 	}
