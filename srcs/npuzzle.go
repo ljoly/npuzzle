@@ -72,6 +72,10 @@ func play(e *Env) {
 				} else {
 					//push neighbour to open list
 					heap.Push(&openList, &childState)
+					e.timeComplexity++
+					if e.sizeComplexity < len(openList) {
+						e.sizeComplexity = len(openList)
+					}
 				}
 			}
 		}
