@@ -101,7 +101,7 @@ func linearConflict(e Env, state *State) int {
 	return l
 }
 
-func distance(current, final []int, index int, e Env, chanM chan<- int) {
+func getDistance(current, final []int, index int, e Env, chanM chan<- int) {
 	var piece, xCurr, yCurr, xFinal, yFinal, distance int
 	piece = current[index]
 	xCurr = index / e.boardSize
@@ -121,7 +121,7 @@ func manhattanDistance(e Env, state *State) int {
 	var m int
 	chanM := make(chan int)
 	for i := 0; i < len(state.board); i++ {
-		go distance(state.board, e.finalState, i, e, chanM)
+		go getDistance(state.board, e.finalState, i, e, chanM)
 	}
 	for i := 0; i < len(state.board); i++ {
 		m += <-chanM
