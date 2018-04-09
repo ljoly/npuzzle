@@ -29,7 +29,6 @@ func main() {
 	}
 	e.file = string(file)
 	tab, size := parseFile(string(e.file))
-	// fmt.Println(tab)
 	e.initState = tab
 	e.boardSize = size
 	e.heuristic = 2
