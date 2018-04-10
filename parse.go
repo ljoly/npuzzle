@@ -132,7 +132,7 @@ func parseFile(file string) ([]int, int) {
 func parseCommand(e *Env) {
 	flagFile := flag.String("f", "", "")
 	flagH := flag.String("heuristic", "", "")
-	flagGreed := flag.Bool("greed", false, "")
+	flagGreed := flag.Bool("greedy", false, "")
 	flag.Parse()
 
 	file, err := ioutil.ReadFile(*flagFile)
