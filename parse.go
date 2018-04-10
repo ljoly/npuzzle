@@ -16,25 +16,38 @@ func getSize(line []string) (int, []int) {
 	return size, board
 }
 
-func countInversions(tab []int, e Env) int {
-	var inversions int
+// func countInversions(tab []int, e Env) int {
+// 	var inversions int
 
-	for i, val := range e.initState {
-		for j := i + 1; j < len(e.initState); j++ {
-			index := getIndexInFinalState(e.finalState, e.initState[j])
-			if val != 0 && e.finalState[index] != 0 && val > e.finalState[index] {
-				inversions++
+// 	for i, val := range tab {
+// 		for j := i + 1; j < len(tab); j++ {
+// 			index := getIndexInFinalState(e.finalState, tab[j])
+// 			if val != 0 && e.finalState[index] != 0 && arr[i] > arr[j] {
+// 				inversions++
+// 			}
+// 		}
+// 	}
+// 	return inversions
+// }
+
+func countInversions(arr []int) int {
+	var inversion int
+	for i := 0; i < len(arr); i++ {
+		for j := i + 1; j < len(arr); j++ {
+			if arr[i] > arr[j] {
+				inversion++
 			}
 		}
 	}
-	return inversions
+	return inversion
 }
 
 func checkSolvability(e Env) {
-	var startInversions = countInversions(e.initState, e)
-	var goalInversions = countInversions(e.finalState, e)
+	var startInversions = countInversions(e.initState)
+	var goalInversions = countInversions(e.finalState)
 
-	if e.boardSize%2 == 0 { // In this case, the row of the '0' tile matters
+	fmt.Println(startInversions, goalInversions)
+	if e.boardSize%2 == 0 {
 		_, y := getXYfromIndex(getIndexToMove(e.initState), e)
 		startInversions += y / e.boardSize
 		goalInversions += y / e.boardSize
@@ -43,6 +56,22 @@ func checkSolvability(e Env) {
 		printError("Puzzle is not solvable")
 	}
 }
+
+// func isSolvable(arr []int, e Env) {
+//     inversion := getInversions(arr);
+
+//     if (N & 1)
+//         return !(inversion & 1);
+
+//     else     // grid is even
+//     {
+//         int pos = findXPosition(puzzle);
+//         if (pos & 1)
+//             return !(inversion & 1);
+//         else
+//             return inversion & 1;
+//     }
+// }
 
 func checkBoard(board []int) {
 	var zeros int
