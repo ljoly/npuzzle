@@ -30,7 +30,7 @@ func getSize(line []string) (int, []int) {
 // 	return inversions
 // }
 
-func countInversions(arr []int) int {
+func countInversions(arr []int, e Env) int {
 	var inversion int
 	for i := 0; i < len(arr); i++ {
 		for j := i + 1; j < len(arr); j++ {
@@ -43,8 +43,8 @@ func countInversions(arr []int) int {
 }
 
 func checkSolvability(e Env) {
-	var startInversions = countInversions(e.initState)
-	var goalInversions = countInversions(e.finalState)
+	var startInversions = countInversions(e.initState, e)
+	var goalInversions = countInversions(e.finalState, e)
 
 	fmt.Println(startInversions, goalInversions)
 	if e.boardSize%2 == 0 {

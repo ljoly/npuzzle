@@ -117,13 +117,13 @@ func getDistance(current, final []int, index int, e Env, chanM chan<- int) {
 	chanM <- distance
 }
 
-func manhattanDistance(e Env, state *State) int {
+func manhattanDistance(e Env, board []int) int {
 	var m int
 	chanM := make(chan int, e.boardSize)
-	for i := 0; i < len(state.board); i++ {
-		go getDistance(state.board, e.finalState, i, e, chanM)
+	for i := 0; i < len(board); i++ {
+		go getDistance(board, e.finalState, i, e, chanM)
 	}
-	for i := 0; i < len(state.board); i++ {
+	for i := 0; i < len(board); i++ {
 		m += <-chanM
 	}
 	close(chanM)
@@ -134,11 +134,11 @@ func heuristic(e Env, state *State) int {
 	var h int
 	switch e.heuristic {
 	case manhattan:
-		h = manhattanDistance(e, state)
+		h = manhattanDistance(e, state.board)
 	case misplaced:
 		h = misplacedTiles(e, state)
 	case manhattanLC:
-		h = manhattanDistance(e, state)
+		h = manhattanDistance(e, state.board)
 		h += linearConflict(e, state)
 	}
 	return h
