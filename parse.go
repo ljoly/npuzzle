@@ -16,20 +16,6 @@ func getSize(line []string) (int, []int) {
 	return size, board
 }
 
-// func countInversions(tab []int, e Env) int {
-// 	var inversions int
-
-// 	for i, val := range tab {
-// 		for j := i + 1; j < len(tab); j++ {
-// 			index := getIndexInFinalState(e.finalState, tab[j])
-// 			if val != 0 && e.finalState[index] != 0 && arr[i] > arr[j] {
-// 				inversions++
-// 			}
-// 		}
-// 	}
-// 	return inversions
-// }
-
 func countInversions(arr []int, e Env) int {
 	var inversion int
 	for i := 0; i < len(arr); i++ {
@@ -56,22 +42,6 @@ func checkSolvability(e Env) {
 		printError("Puzzle is not solvable")
 	}
 }
-
-// func isSolvable(arr []int, e Env) {
-//     inversion := getInversions(arr);
-
-//     if (N & 1)
-//         return !(inversion & 1);
-
-//     else     // grid is even
-//     {
-//         int pos = findXPosition(puzzle);
-//         if (pos & 1)
-//             return !(inversion & 1);
-//         else
-//             return inversion & 1;
-//     }
-// }
 
 func checkBoard(board []int) {
 	var zeros int
