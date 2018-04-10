@@ -130,9 +130,9 @@ func parseFile(file string) ([]int, int) {
 }
 
 func parseCommand(e *Env) {
-	flagFile := flag.String("f", "", "")
-	flagH := flag.String("heuristic", "", "")
-	flagGreed := flag.Bool("greedy", false, "")
+	flagFile := flag.String("f", "", "Puzzle to solve")
+	flagH := flag.String("heuristic", "MLC", "Heuristics: Manhattan (M), Misplaced Tiles (MT) or Manhattan + Linear Conflict (MLC)")
+	flagGreed := flag.Bool("greedy", false, "Greedy search")
 	flag.Parse()
 
 	file, err := ioutil.ReadFile(*flagFile)
