@@ -45,7 +45,7 @@ func getNewState(e Env, index, indexToMove int, currentState State, chanState ch
 		new.iteration = currentState.iteration + 1
 		new.heuristic = heuristic(e, new)
 		new.priority = new.heuristic
-		if e.greedySearch {
+		if *flagGreed {
 			new.priority += new.iteration
 		}
 		chanState <- *new
