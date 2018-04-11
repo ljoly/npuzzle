@@ -24,6 +24,9 @@ const (
 func main() {
 	e := Env{}
 	parseCommand(&e)
+	if *flagServer {
+		initServer()
+	}
 	tab, size := parseFile(string(e.file))
 	e.initState = tab
 	e.boardSize = size
