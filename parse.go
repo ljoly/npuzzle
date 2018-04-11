@@ -16,27 +16,27 @@ func getSize(line []string) (int, []int) {
 	return size, board
 }
 
-func countInversions(arr []int, e Env) int {
-	var inversion int
-	for i := 0; i < len(arr); i++ {
-		for j := i + 1; j < len(arr); j++ {
-			if arr[i] > arr[j] {
-				inversion++
+func countInversions(tab []int, e Env) int {
+	var inversions int
+
+	for i, val := range tab {
+		for j := i + 1; j < len(tab); j++ {
+			index := getIndexInFinalState(e.finalState, tab[j])
+			if val != 0 && e.finalState[index] != 0 && tab[i] > tab[j] {
+				inversions++
 			}
 		}
 	}
-	return inversion
+	return inversions
 }
 
 func checkSolvability(e Env) {
 	var startInversions = countInversions(e.initState, e)
 	var goalInversions = countInversions(e.finalState, e)
 
-	fmt.Println(startInversions, goalInversions)
 	if e.boardSize%2 == 0 {
-		_, y := getXYfromIndex(getIndexToMove(e.initState), e)
-		startInversions += y / e.boardSize
-		goalInversions += y / e.boardSize
+		startInversions += getIndexToMove(e.initState) / e.boardSize
+		goalInversions += getIndexToMove(e.finalState) / e.boardSize
 	}
 	if startInversions%2 != goalInversions%2 {
 		printError("Puzzle is not solvable")
