@@ -37,6 +37,6 @@ func main() {
 	fmt.Println("Heuristic:", e.heuristic)
 	fmt.Println("States selected in the openList:", e.timeComplexity)
 	fmt.Println("Maximum number of states in memory:", e.sizeComplexity)
-	fmt.Println("Number of moves:", e.moves)
+	fmt.Println("Number of moves:", e.moves-1)
 	fmt.Println("greedySearch:", *flagGreed)
 }
