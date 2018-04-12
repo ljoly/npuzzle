@@ -13,7 +13,7 @@ func launchServer(e Env) {
 		log.Fatal(err)
 	}
 	play(&e)
-	server.On("connect", func(socket socketio.Socket) {
+	server.On("connection", func(socket socketio.Socket) {
 		log.Println("CONNECTED")
 		socket.On("hello", func(msg string) {
 			log.Println("HELLO FROM FRONT !")
@@ -27,7 +27,6 @@ func launchServer(e Env) {
 	})
 
 	http.Handle("/socket.io/", server)
-	http.Handle("/", http.FileServer(http.Dir("./asset")))
 	log.Println("Serving at localhost:3000...")
 	log.Fatal(http.ListenAndServe(":3000", nil))
 }
