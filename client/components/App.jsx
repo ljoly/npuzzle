@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import TileSection from './tiles/TileSection.jsx'
+import ButtonSection from './buttons/ButtonSection.jsx'
 import io from 'socket.io-client'
 
 class App extends Component{
@@ -11,21 +12,35 @@ class App extends Component{
                     [15, 24, 0, 20, 7],
                     [14, 23, 22, 21, 8],
                     [13, 12, 11, 10, 9]],
-            size: 5,
-            endpoint: "http://localhost:3000" // this is where we are connecting to with sockets
+            size: 5
         }
     }
+    prevState(){
+        console.log('prev')
+    }
+    nextState(){
+        console.log('next')
+    }
+    go(){
+        console.log('go')
+    }
     render(){
-        const socket = io(this.state.endpoint)
+        // const socket = io(http://localhost:3000)
         return (
-            // <div>
-            //     <TileSection
-            //         {...this.state}
-            //     />
-            // </div>
-            <div style={{ textAlign: "center" }}>
-                <button onClick={() => console.log("button")}>Change Color</button>
-          </div>
+            <div>
+                <TileSection
+                    {...this.state}
+                />
+                <ButtonSection
+                    prevState = {this.prevState.bind(this)}
+                    nextState = {this.nextState.bind(this)}
+                    go = {this.go.bind(this)}
+                    {...this.state}
+                />
+            </div>
+        //     <div style={{ textAlign: "center" }}>
+        //         <button onClick={() => console.log("button")}>Change Color</button>
+        //   </div>
         )
     }
 }

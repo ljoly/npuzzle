@@ -11,6 +11,7 @@ class TileSection extends Component{
                         tiles={tiles}
                         size={this.props.size}
                         {...this.state}
+                        key={tiles.toString()}
                     />)
                 })}
             </div>

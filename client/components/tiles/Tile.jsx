@@ -27,8 +27,8 @@ class Tile extends Component{
 }
 
 Tile.propTypes = {
-    tile: PropTypes.object.isRequired,
-    size: PropTypes.object.isRequired
+    tile: PropTypes.number.isRequired,
+    size: PropTypes.number.isRequired
 }
 
 export default Tile

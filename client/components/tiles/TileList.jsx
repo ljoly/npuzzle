@@ -10,6 +10,7 @@ class TileList extends Component{
                         return(<Tile
                         tile={tile}
                         size={this.props.size}
+                        key={tile.toString()}
                     />)
                 })}
             </div>
