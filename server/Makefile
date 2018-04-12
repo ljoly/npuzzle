@@ -6,7 +6,7 @@
 #    By: ljoly <ljoly@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/04/09 16:05:01 by ljoly             #+#    #+#              #
-#    Updated: 2018/04/11 18:14:56 by ljoly            ###   ########.fr        #
+#    Updated: 2018/04/12 13:43:10 by ljoly            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,8 +16,7 @@ SRCS	=	$(shell find . -type f -name "*.go")
 all: $(NAME)
 	
 $(NAME)	: $(SRCS)
-#	@go get ./...
-	@go get github.com/googollee/go-socket.io
+	@go get ./...
 	@go build -o $(NAME)
 clean:
 	@rm -f $(NAME)

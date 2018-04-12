@@ -7,14 +7,15 @@ import (
 	"github.com/googollee/go-socket.io"
 )
 
-func initServer() {
+func launchServer(e Env) {
 	server, err := socketio.NewServer(nil)
 	if err != nil {
 		log.Fatal(err)
 	}
+	play(&e)
 	server.On("connect", func(socket socketio.Socket) {
 		log.Println("CONNECTED")
-		socket.On("hello from front", func(msg string) {
+		socket.On("hello", func(msg string) {
 			log.Println("HELLO FROM FRONT !")
 		})
 		socket.On("disconnect", func() {
