@@ -13,7 +13,7 @@ func getStates(bestState *State, e *Env, chanState chan<- State) {
 	}
 }
 
-func play(e *Env) {
+func aStarSolver(e *Env) {
 	var (
 		openList   PriorityQueue
 		closedList PriorityQueue

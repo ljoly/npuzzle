@@ -19,25 +19,30 @@ const (
 	manhattanLC
 )
 
-func main() {
-	e := Env{}
-	parseCommand(&e)
-	if *flagServer {
-		initServer()
-	}
+func play(e *Env) {
 	tab, size := parseFile(string(e.file))
 	e.initState = tab
 	e.boardSize = size
-	getFinalState(&e)
+	getFinalState(e)
 	if sameArrays(e.initState, e.finalState) {
 		fmt.Println("Puzzle already solved")
 		return
 	}
-	checkSolvability(e)
-	play(&e)
-	fmt.Println("Heuristic:", e.heuristic)
-	fmt.Println("States selected in the openList:", e.timeComplexity)
-	fmt.Println("Maximum number of states in memory:", e.sizeComplexity)
-	fmt.Println("Number of moves:", e.moves-1)
-	fmt.Println("greedySearch:", *flagGreed)
+	checkSolvability(*e)
+	aStarSolver(e)
+}
+
+func main() {
+	e := Env{}
+	parseCommand(&e)
+	if *flagServer {
+		launchServer(e)
+	} else {
+		play(&e)
+		fmt.Println("Heuristic:", e.heuristic)
+		fmt.Println("States selected in the openList:", e.timeComplexity)
+		fmt.Println("Maximum number of states in memory:", e.sizeComplexity)
+		fmt.Println("Number of moves:", e.moves-1)
+		fmt.Println("greedySearch:", *flagGreed)
+	}
 }
