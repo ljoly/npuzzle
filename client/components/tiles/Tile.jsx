@@ -14,13 +14,13 @@ class Tile extends Component{
         const bgColor = "#" + r + g + b;
         if (this.props.tile != 0) {
             return (
-                <tile style={{backgroundColor: bgColor}}>
+                <span className="tile" style={{backgroundColor: bgColor}}>
                     {this.props.tile}  
-                </tile>
+                </span>
             )
         } else {
             return (
-                <tile style={{backgroundColor: 'white'}}>&nbsp;</tile>
+                <span className="tile" style={{backgroundColor: 'white'}}>&nbsp;</span>
             )
         }
     }

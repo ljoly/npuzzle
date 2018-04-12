@@ -25,7 +25,12 @@ class App extends Component{
         console.log('go')
     }
     render(){
-        // const socket = io(http://localhost:3000)
+        const socket = io("http://localhost:3000")
+        if (socket.connected) {
+            console.log("CONNECTED TO SERVER")
+        } else {
+            console.log("CANNOT CONNECT")
+        }
         return (
             <div>
                 <TileSection
