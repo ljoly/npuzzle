@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import TileSection from './tiles/TileSection.jsx'
-import Socket from '../socket.js'
+import socketIOClient from 'socket.io-client'
 
 class App extends Component{
     constructor(props){
@@ -11,31 +11,34 @@ class App extends Component{
                     [15, 24, 0, 20, 7],
                     [14, 23, 22, 21, 8],
                     [13, 12, 11, 10, 9]],
-            size: 5
+            size: 5,
+            endpoint: "http://{your machine's ip}:4001" // this is where we are connecting to with sockets
         }
     }
-    // componentDidMount(){
-    //     let socket = this.socket = new Socket();
-    //     socket.on('connect', this.onConnect.bind(this));
-    //     socket.on('disconnect', this.onDisconnect.bind(this));
-    //     socket.on('update', this.updatePuzzle.bind(this));
-    // }
-    // updatePuzzle(puzzle){
-    //     this.setState({puzzle});
-    // }
-    // onConnect(){
-    //     this.setState({connected: true});
-    // }
-    // onDisconnect(){
-    //     this.setState({connected: false});
-    // }
+    send() {
+        const socket = socketIOClient(this.state.endpoint)
+        
+        // this emits an event to the socket (your server) with an argument of 'red'
+        // you can make the argument any color you would like, or any kind of data you want to send.
+        
+        socket.emit('hello from front', 'red') 
+        // socket.emit('change color', 'red', 'yellow') | you can have multiple arguments
+    }
     render(){
+        const socket = socketIOClient(this.state.endpoint)
+        socket.on('change color', (color) => {
+            // setting the color of our button
+            document.body.style.backgroundColor = color
+          })
         return (
-            <div>
-                <TileSection
-                    {...this.state}
-                />
-            </div>
+            // <div>
+            //     <TileSection
+            //         {...this.state}
+            //     />
+            // </div>
+            <div style={{ textAlign: "center" }}>
+            <button onClick={() => this.send()}>Change Color</button>
+          </div>
         )
     }
 }
