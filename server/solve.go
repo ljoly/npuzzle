@@ -6,13 +6,6 @@ import (
 	"sort"
 )
 
-func getStates(bestState *State, chanState chan<- State) {
-	indexToMove := getIndexToMove(bestState.board)
-	for i := 0; i < 4; i++ {
-		go getNewState(i, indexToMove, *bestState, chanState)
-	}
-}
-
 func aStarSolver() {
 	var (
 		openList   PriorityQueue
