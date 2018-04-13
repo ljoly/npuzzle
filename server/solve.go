@@ -6,14 +6,14 @@ import (
 	"sort"
 )
 
-func getStates(bestState *State, e *Env, chanState chan<- State) {
+func getStates(bestState *State, chanState chan<- State) {
 	indexToMove := getIndexToMove(bestState.board)
 	for i := 0; i < 4; i++ {
-		go getNewState(*e, i, indexToMove, *bestState, chanState)
+		go getNewState(i, indexToMove, *bestState, chanState)
 	}
 }
 
-func aStarSolver(e *Env) {
+func aStarSolver() {
 	var (
 		openList   PriorityQueue
 		closedList PriorityQueue
@@ -35,12 +35,12 @@ func aStarSolver(e *Env) {
 		bestState = heap.Pop(&openList).(*State)
 		//check if the puzzle is solved
 		if sameArrays(bestState.board, e.finalState) /*|| bestState.heuristic == 0*/ {
-			printStates(e, bestState)
+			printStates(bestState)
 			close(chanState)
 			return
 		}
 
-		getStates(bestState, e, chanState)
+		getStates(bestState, chanState)
 
 		for i := 0; i < 4; i++ {
 			childState := <-chanState

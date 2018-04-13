@@ -1,6 +1,6 @@
 package main
 
-func getFinalState(e *Env) {
+func getFinalState() {
 	var cursor = 1
 	var x = 0
 	var ix = 1

@@ -17,12 +17,12 @@ import (
 // 	// ...
 // }
 
-func launchServer(e Env) {
+func launchServer() {
 	server, err := socketio.NewServer(nil)
 	if err != nil {
 		log.Fatal(err)
 	}
-	play(&e)
+	play()
 	server.On("connection", func(socket socketio.Socket) {
 		log.Println("CONNECTED")
 		socket.On("hello", func(msg string) {

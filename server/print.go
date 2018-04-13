@@ -10,7 +10,7 @@ func printError(err string) {
 	os.Exit(0)
 }
 
-func printBoard(e Env, state State) {
+func printBoard(state State) {
 	if state.board != nil {
 		for i := 0; i < e.boardSize; i++ {
 			for j := 0; j < e.boardSize; j++ {
@@ -24,16 +24,16 @@ func printBoard(e Env, state State) {
 	fmt.Println("")
 }
 
-func printStates(e *Env, state *State) {
+func printStates(state *State) {
 	if state != nil {
-		printStates(e, state.parent)
+		printStates(state.parent)
 		fmt.Println("State", e.moves)
-		printBoard(*e, *state)
+		printBoard(*state)
 		e.moves++
 	}
 }
 
-func printResults(e Env) {
+func printResults() {
 	fmt.Println("Heuristic:", e.heuristic)
 	fmt.Println("States selected in the openList:", e.timeComplexity)
 	fmt.Println("Maximum number of states in memory:", e.sizeComplexity)

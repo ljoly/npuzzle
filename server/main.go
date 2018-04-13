@@ -19,26 +19,27 @@ const (
 	manhattanLC
 )
 
-func play(e *Env) {
+var e Env
+
+func play() {
 	tab, size := parseFile(string(e.file))
 	e.initState = tab
 	e.boardSize = size
-	getFinalState(e)
+	getFinalState()
 	if sameArrays(e.initState, e.finalState) {
 		fmt.Println("Puzzle already solved")
 		return
 	}
-	checkSolvability(*e)
-	aStarSolver(e)
-	printResults(*e)
+	checkSolvability()
+	aStarSolver()
+	printResults()
 }
 
 func main() {
-	e := Env{}
-	parseCommand(&e)
+	parseCommand()
 	if *flagServer {
-		launchServer(e)
+		launchServer()
 	} else {
-		play(&e)
+		play()
 	}
 }

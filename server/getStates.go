@@ -1,6 +1,6 @@
 package main
 
-func swapTiles(tile1, tile2 int, board []int, e Env) bool {
+func swapTiles(tile1, tile2 int, board []int) bool {
 	if tile2 >= 0 && tile2 < e.boardSize*e.boardSize {
 		tmp := board[tile1]
 		board[tile1] = board[tile2]
@@ -9,13 +9,13 @@ func swapTiles(tile1, tile2 int, board []int, e Env) bool {
 	return true
 }
 
-func getXYfromIndex(index int, e Env) (int, int) {
+func getXYfromIndex(index int) (int, int) {
 	x := index / e.boardSize
 	y := index % e.boardSize
 	return x, y
 }
 
-func getNewState(e Env, index, indexToMove int, currentState State, chanState chan<- State) {
+func getNewState(index, indexToMove int, currentState State, chanState chan<- State) {
 	new := &State{
 		board:     nil,
 		priority:  -1,
@@ -26,16 +26,16 @@ func getNewState(e Env, index, indexToMove int, currentState State, chanState ch
 	var passed = false
 	board := make([]int, e.boardSize*e.boardSize)
 	copy(board, currentState.board)
-	x, y := getXYfromIndex(indexToMove, e)
+	x, y := getXYfromIndex(indexToMove)
 	switch {
 	case index == 0 && y-1 >= 0:
-		passed = swapTiles(indexToMove, indexToMove-1, board, e)
+		passed = swapTiles(indexToMove, indexToMove-1, board)
 	case index == 1 && x-1 >= 0:
-		passed = swapTiles(indexToMove, indexToMove-e.boardSize, board, e)
+		passed = swapTiles(indexToMove, indexToMove-e.boardSize, board)
 	case index == 2 && y+1 < e.boardSize:
-		passed = swapTiles(indexToMove, indexToMove+1, board, e)
+		passed = swapTiles(indexToMove, indexToMove+1, board)
 	case index == 3 && x+1 < e.boardSize:
-		passed = swapTiles(indexToMove, indexToMove+e.boardSize, board, e)
+		passed = swapTiles(indexToMove, indexToMove+e.boardSize, board)
 	}
 	if passed == false {
 		chanState <- *new
@@ -43,7 +43,7 @@ func getNewState(e Env, index, indexToMove int, currentState State, chanState ch
 		new.board = board
 		new.parent = &currentState
 		new.iteration = currentState.iteration + 1
-		new.heuristic = heuristic(e, new)
+		new.heuristic = getHeuristic(new)
 		new.priority = new.heuristic
 		if *flagGreed {
 			new.priority += new.iteration

@@ -16,7 +16,7 @@ func getSize(line []string) (int, []int) {
 	return size, board
 }
 
-func countInversions(tab []int, e Env) int {
+func countInversions(tab []int) int {
 	var inversions int
 
 	for i, val := range tab {
@@ -30,9 +30,9 @@ func countInversions(tab []int, e Env) int {
 	return inversions
 }
 
-func checkSolvability(e Env) {
-	var startInversions = countInversions(e.initState, e)
-	var goalInversions = countInversions(e.finalState, e)
+func checkSolvability() {
+	var startInversions = countInversions(e.initState)
+	var goalInversions = countInversions(e.finalState)
 
 	if e.boardSize%2 == 0 {
 		startInversions += getIndexToMove(e.initState) / e.boardSize
@@ -104,7 +104,7 @@ var (
 	flagServer *bool
 )
 
-func parseCommand(e *Env) {
+func parseCommand() {
 	flagFile := flag.String("f", "", "File containing the puzzle to solve")
 	flagH := flag.String("heuristic", "MLC", "Heuristics: Manhattan (\"M\"), Misplaced Tiles (\"MT\") or Manhattan + Linear Conflict (\"MLC\")")
 	flagGreed = flag.Bool("greedy", false, "Use greedy search (if not true, uniform-cost search is used")

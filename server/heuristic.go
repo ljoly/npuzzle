@@ -5,7 +5,7 @@ const (
 	vertical
 )
 
-func misplacedTiles(e Env, state *State) int {
+func misplacedTiles(state *State) int {
 	var mp int
 	for i := range state.board {
 		if state.board[i] != 0 && i != getIndexInFinalState(e.finalState, state.board[i]) {
@@ -15,7 +15,7 @@ func misplacedTiles(e Env, state *State) int {
 	return mp
 }
 
-func getIndexInFinalRow(e Env, dir, index int, val int) int {
+func getIndexInFinalRow(dir, index int, val int) int {
 	start := index
 	if dir == vertical {
 		for start >= e.boardSize {
@@ -39,9 +39,9 @@ func getIndexInFinalRow(e Env, dir, index int, val int) int {
 	return -1
 }
 
-func verticalConflict(e Env, currentState []int, index int) int {
+func verticalConflict(currentState []int, index int) int {
 	var conflict int
-	finalIndexOfCurrent := getIndexInFinalRow(e, vertical, index, currentState[index])
+	finalIndexOfCurrent := getIndexInFinalRow(vertical, index, currentState[index])
 	start := index
 	for start >= e.boardSize {
 		start -= e.boardSize
@@ -49,7 +49,7 @@ func verticalConflict(e Env, currentState []int, index int) int {
 	if finalIndexOfCurrent != -1 {
 		for i := start; i < e.boardSize*e.boardSize; i += e.boardSize {
 			if i != index && currentState[i] != 0 {
-				finalIndexComp := getIndexInFinalRow(e, vertical, i, currentState[i])
+				finalIndexComp := getIndexInFinalRow(vertical, i, currentState[i])
 				if finalIndexComp != -1 && ((index > i && finalIndexOfCurrent < finalIndexComp) || (index < i && finalIndexOfCurrent > finalIndexComp)) {
 					conflict++
 				}
@@ -59,9 +59,9 @@ func verticalConflict(e Env, currentState []int, index int) int {
 	return conflict
 }
 
-func horizontalConflict(e Env, currentState []int, index int) int {
+func horizontalConflict(currentState []int, index int) int {
 	var conflict int
-	finalIndexOfCurrent := getIndexInFinalRow(e, horizontal, index, currentState[index])
+	finalIndexOfCurrent := getIndexInFinalRow(horizontal, index, currentState[index])
 	start := index
 	for start%e.boardSize > 0 {
 		start--
@@ -69,7 +69,7 @@ func horizontalConflict(e Env, currentState []int, index int) int {
 	if finalIndexOfCurrent != -1 {
 		for i := start; i < start+e.boardSize; i++ {
 			if i != index && currentState[i] != 0 {
-				finalIndexComp := getIndexInFinalRow(e, horizontal, i, currentState[i])
+				finalIndexComp := getIndexInFinalRow(horizontal, i, currentState[i])
 				if finalIndexComp != -1 && ((index > i && finalIndexOfCurrent < finalIndexComp) || (index < i && finalIndexOfCurrent > finalIndexComp)) {
 					conflict++
 				}
@@ -79,20 +79,20 @@ func horizontalConflict(e Env, currentState []int, index int) int {
 	return conflict
 }
 
-func getConflicts(e Env, currentState []int, i int, chanLC chan<- int) {
+func getConflicts(currentState []int, i int, chanLC chan<- int) {
 	var l int
 	if currentState[i] != 0 {
-		l += verticalConflict(e, currentState, i)
-		l += horizontalConflict(e, currentState, i)
+		l += verticalConflict(currentState, i)
+		l += horizontalConflict(currentState, i)
 	}
 	chanLC <- l
 }
 
-func linearConflict(e Env, state *State) int {
+func linearConflict(state *State) int {
 	var l int
 	chanLC := make(chan int, e.boardSize)
 	for i := range state.board {
-		go getConflicts(e, state.board, i, chanLC)
+		go getConflicts(state.board, i, chanLC)
 	}
 	for i := 0; i < len(state.board); i++ {
 		l += <-chanLC
@@ -101,7 +101,7 @@ func linearConflict(e Env, state *State) int {
 	return l
 }
 
-func getDistance(current, final []int, index int, e Env, chanM chan<- int) {
+func getDistance(current, final []int, index int, chanM chan<- int) {
 	var piece, xCurr, yCurr, xFinal, yFinal, distance int
 	piece = current[index]
 	xCurr = index / e.boardSize
@@ -117,11 +117,11 @@ func getDistance(current, final []int, index int, e Env, chanM chan<- int) {
 	chanM <- distance
 }
 
-func manhattanDistance(e Env, board []int) int {
+func manhattanDistance(board []int) int {
 	var m int
 	chanM := make(chan int, e.boardSize)
 	for i := 0; i < len(board); i++ {
-		go getDistance(board, e.finalState, i, e, chanM)
+		go getDistance(board, e.finalState, i, chanM)
 	}
 	for i := 0; i < len(board); i++ {
 		m += <-chanM
@@ -130,16 +130,16 @@ func manhattanDistance(e Env, board []int) int {
 	return m
 }
 
-func heuristic(e Env, state *State) int {
+func getHeuristic(state *State) int {
 	var h int
 	switch e.heuristic {
 	case manhattan:
-		h = manhattanDistance(e, state.board)
+		h = manhattanDistance(state.board)
 	case misplaced:
-		h = misplacedTiles(e, state)
+		h = misplacedTiles(state)
 	case manhattanLC:
-		h = manhattanDistance(e, state.board)
-		h += linearConflict(e, state)
+		h = manhattanDistance(state.board)
+		h += linearConflict(state)
 	}
 	return h
 }
