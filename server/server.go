@@ -1,6 +1,8 @@
 package main
 
 import (
+	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 
@@ -8,9 +10,9 @@ import (
 )
 
 type Move struct {
-	board     []int
-	priority  int
-	heuristic int
+	Board     []int
+	Priority  int
+	Heuristic int
 }
 
 var moves []Move
@@ -19,9 +21,9 @@ func getMoves(state *State) {
 	if state != nil {
 		getMoves(state.parent)
 		m := Move{
-			board:     state.board,
-			priority:  state.priority,
-			heuristic: state.heuristic,
+			Board:     state.board,
+			Priority:  state.priority,
+			Heuristic: state.heuristic,
 		}
 		moves = append(moves, m)
 		printState(state)
@@ -35,12 +37,21 @@ func launchServer() {
 		log.Fatal(err)
 	}
 	moves = make([]Move, 0)
+
 	play()
+
+	i := 0
 	server.On("connection", func(socket socketio.Socket) {
 		log.Println("CONNECTED")
-		socket.On("hello", func(msg string) {
-			log.Println("HELLO FROM FRONT !")
-		})
+
+		rawMove, err := json.Marshal(moves[i])
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		// emit the first State on connection
+		socket.Emit("nextState", rawMove)
+
 		socket.On("disconnection", func() {
 			log.Println("DISCONNECTED")
 		})
