@@ -7,18 +7,13 @@ import (
 	"github.com/googollee/go-socket.io"
 )
 
-// func enableCors(w *http.ResponseWriter) {
-// 	(*w).Header().Set("Access-Control-Allow-Origin", "*")
-// }
-
-// func handler(w http.ResponseWriter, req *http.Request) {
-// 	// ...
-// 	enableCors(&w)
-// 	// ...
-// }
+var (
+	server *socketio.Server
+	err    error
+)
 
 func launchServer() {
-	server, err := socketio.NewServer(nil)
+	server, err = socketio.NewServer(nil)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -35,10 +30,13 @@ func launchServer() {
 	server.On("error", func(so socketio.Socket, err error) {
 		log.Println("error:", err)
 	})
+	http.HandleFunc("/socket.io/", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Access-Control-Allow-Origin", "http://localhost:8080")
+		w.Header().Set("Access-Control-Allow-Credentials", "true")
+		server.ServeHTTP(w, r)
+	})
 
-	// http.HandleFunc("/socket.io/", handler)
-
-	http.Handle("/socket.io/", server)
+	// http.Handle("/socket.io/", server)
 	log.Println("Serving at localhost:3000...")
 	log.Fatal(http.ListenAndServe(":3000", nil))
 }
