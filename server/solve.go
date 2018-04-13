@@ -34,10 +34,13 @@ func aStarSolver() {
 		//select and remove the best state from the open list
 		bestState = heap.Pop(&openList).(*State)
 		//check if the puzzle is solved
-		if sameArrays(bestState.board, e.finalState) /*|| bestState.heuristic == 0*/ {
-			printStates(bestState)
+		if sameArrays(bestState.board, e.finalState) {
+			if *flagServer {
+				getMoves(bestState)
+			} else {
+				printMoves(bestState)
+			}
 			close(chanState)
-			return
 		}
 
 		getStates(bestState, chanState)

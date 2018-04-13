@@ -24,19 +24,23 @@ func printBoard(state State) {
 	fmt.Println("")
 }
 
-func printStates(state *State) {
-	if state != nil {
-		printStates(state.parent)
-		fmt.Println("State", e.moves)
-		printBoard(*state)
-		e.moves++
-	}
-}
-
 func printResults() {
 	fmt.Println("Heuristic:", e.heuristic)
 	fmt.Println("States selected in the openList:", e.timeComplexity)
 	fmt.Println("Maximum number of states in memory:", e.sizeComplexity)
 	fmt.Println("Number of moves:", e.moves-1)
 	fmt.Println("greedySearch:", *flagGreed)
+}
+
+func printState(state *State) {
+	fmt.Println("State", e.moves)
+	printBoard(*state)
+}
+
+func printMoves(state *State) {
+	if state != nil {
+		printMoves(state.parent)
+		printState(state)
+		e.moves++
+	}
 }

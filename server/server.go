@@ -7,16 +7,34 @@ import (
 	"github.com/googollee/go-socket.io"
 )
 
-var (
-	server *socketio.Server
-	err    error
-)
+type Move struct {
+	board     []int
+	priority  int
+	heuristic int
+}
+
+var moves []Move
+
+func getMoves(state *State) {
+	if state != nil {
+		getMoves(state.parent)
+		m := Move{
+			board:     state.board,
+			priority:  state.priority,
+			heuristic: state.heuristic,
+		}
+		moves = append(moves, m)
+		printState(state)
+		e.moves++
+	}
+}
 
 func launchServer() {
-	server, err = socketio.NewServer(nil)
+	server, err := socketio.NewServer(nil)
 	if err != nil {
 		log.Fatal(err)
 	}
+	moves = make([]Move, 0)
 	play()
 	server.On("connection", func(socket socketio.Socket) {
 		log.Println("CONNECTED")
@@ -35,8 +53,6 @@ func launchServer() {
 		w.Header().Set("Access-Control-Allow-Credentials", "true")
 		server.ServeHTTP(w, r)
 	})
-
-	// http.Handle("/socket.io/", server)
 	log.Println("Serving at localhost:3000...")
 	log.Fatal(http.ListenAndServe(":3000", nil))
 }
