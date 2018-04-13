@@ -12,27 +12,19 @@ class App extends Component{
             console.log("CONNECTED TO SERVER")            
         })
         this.state = {
-            puzzle: [1, 2, 3, 4, 5, 16, 17, 18, 19, 6,15, 24, 0, 20, 7 ,14, 23, 22, 21, 8, 13, 12, 11, 10, 9],
+            puzzle: [1, 2, 3, 4, 5, 16, 17, 18, 19, 6, 15, 24, 0, 20, 7 ,14, 23, 22, 21, 8, 13, 12, 11, 10, 9],
             size: 5,
             socket
         }
     }
     socketHandler(){
-        this.state.socket.on('State', function(data){
-            console.log('State')
-            this.setState({puzzle: data});
-        }.bind(this))
-
-        this.state.socket.on('Size', function(data){
-            console.log('Size')
-            this.setState({size: data});
-        }.bind(this))
-
-        this.state.socket.on('All', function(data){
-            console.log(data)
+        this.state.socket.on('state', function(data){
+            console.log('State', data)
+            // this.setState({puzzle: data});
         }.bind(this))
     }
     prevState(){
+        console.log("okok")
         this.state.socket.emit('prevState')
     }
     nextState(){

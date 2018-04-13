@@ -31,7 +31,19 @@ func getMoves(state *State) {
 	}
 }
 
+func raw(data Move) []byte {
+	rawMove, err := json.Marshal(data)
+	if err != nil {
+		fmt.Println(err)
+		printError("error json")
+		return nil
+	}
+	return rawMove
+}
+
 func launchServer() {
+	var index int
+
 	server, err := socketio.NewServer(nil)
 	if err != nil {
 		log.Fatal(err)
@@ -40,25 +52,51 @@ func launchServer() {
 
 	play()
 
-	i := 0
 	server.On("connection", func(socket socketio.Socket) {
+		index = 0
 		log.Println("CONNECTED")
 
-		rawMove, err := json.Marshal(moves[i])
-		if err != nil {
-			fmt.Println(err)
-			return
-		}
+		rawMove := raw(moves[index])
 		// emit the first State on connection
-		socket.Emit("nextState", rawMove)
+		socket.Emit("state", rawMove)
+
+		socket.On("prevState", func() {
+			fmt.Println("PREV")
+			if index > 0 {
+				index--
+				rawMove := raw(moves[index])
+				socket.Emit("state", rawMove)
+			}
+		})
+
+		socket.On("nextState", func() {
+			fmt.Println("NEXT")
+			if index < len(moves) {
+				index++
+				rawMove := raw(moves[index])
+				socket.Emit("state", rawMove)
+			}
+		})
+
+		socket.On("go", func() {
+			fmt.Println("GO")
+			index = 0
+			for index < len(moves) {
+				rawMove := raw(moves[index])
+				socket.Emit("state", rawMove)
+				index++
+			}
+		})
 
 		socket.On("disconnection", func() {
 			log.Println("DISCONNECTED")
 		})
 	})
+
 	server.On("error", func(so socketio.Socket, err error) {
 		log.Println("error:", err)
 	})
+
 	http.HandleFunc("/socket.io/", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Access-Control-Allow-Origin", "http://localhost:8080")
 		w.Header().Set("Access-Control-Allow-Credentials", "true")
