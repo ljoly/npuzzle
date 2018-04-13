@@ -12,7 +12,7 @@ class ButtonSection extends Component{
         this.props.nextState();    
     }
     render(){
-        console.log(this.props.prevState)
+        // console.log(this.props.prevState)
         return (
             <div>
                 <div style={{ textAlign: "center" }}>
