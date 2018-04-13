@@ -30,6 +30,7 @@ func play(e *Env) {
 	}
 	checkSolvability(*e)
 	aStarSolver(e)
+	printResults(*e)
 }
 
 func main() {
@@ -39,10 +40,5 @@ func main() {
 		launchServer(e)
 	} else {
 		play(&e)
-		fmt.Println("Heuristic:", e.heuristic)
-		fmt.Println("States selected in the openList:", e.timeComplexity)
-		fmt.Println("Maximum number of states in memory:", e.sizeComplexity)
-		fmt.Println("Number of moves:", e.moves-1)
-		fmt.Println("greedySearch:", *flagGreed)
 	}
 }
