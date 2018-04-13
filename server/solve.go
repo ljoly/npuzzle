@@ -41,6 +41,7 @@ func aStarSolver() {
 				printMoves(bestState)
 			}
 			close(chanState)
+			return
 		}
 
 		getStates(bestState, chanState)
