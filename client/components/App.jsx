@@ -12,29 +12,51 @@ class App extends Component{
             console.log("CONNECTED TO SERVER")            
         })
         this.state = {
-            puzzle: [1, 2, 3, 4, 5, 16, 17, 18, 19, 6, 15, 24, 0, 20, 7 ,14, 23, 22, 21, 8, 13, 12, 11, 10, 9],
-            size: 5,
+            index: 0,
+            all: [],
+            // puzzle: [1, 2, 3, 4, 5, 16, 17, 18, 19, 6, 15, 24, 0, 20, 7 ,14, 23, 22, 21, 8, 13, 12, 11, 10, 9],
+            puzzle: [],
+            size: 0,
             socket
         }
     }
     socketHandler(){
         this.state.socket.on('state', function(data){
             console.log('State', data)
-            // this.setState({puzzle: data});
+            data = JSON.parse(data)
+            this.setState({all: data});
+            this.setState({puzzle: this.state.all[0].Board, size: this.state.all[0].Size})
         }.bind(this))
     }
     prevState(){
-        console.log("okok")
-        this.state.socket.emit('prevState')
+        console.log('PREV')
+        if (this.state.index > 0) {
+            this.setState({index: this.state.index-1})
+            this.setState({puzzle: this.state.all[this.state.index].Board, size: this.state.all[this.state.index].Size})
+        }
     }
     nextState(){
-        this.state.socket.emit('nextState')
+        console.log('NEXT')
+        if (this.state.index < this.state.all.length) {
+            this.setState({index: this.state.index+1})
+            this.setState({puzzle: this.state.all[this.state.index].Board, size: this.state.all[this.state.index].Size})
+        }
     }
     go(){
-        this.state.socket.emit('go')
+        var index = 0
+            while (index < this.state.all.length - 1) {
+                setTimeout(function(){
+                index++
+                console.log(index)
+                console.log(this.state.all[index].Board)
+                this.setState({puzzle: this.state.all[index].Board, size: this.state.all[index].Size})
+            }.bind(this), 3000);
+        }
+    }
+    componentDidMount(){
+        this.socketHandler()        
     }
     render(){
-        this.socketHandler()
         return (
             <div>
                 <TileSection
