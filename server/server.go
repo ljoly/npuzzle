@@ -13,6 +13,7 @@ type Move struct {
 	Board     []int
 	Priority  int
 	Heuristic int
+	Size      int
 }
 
 var moves []Move
@@ -24,6 +25,7 @@ func getMoves(state *State) {
 			Board:     state.board,
 			Priority:  state.priority,
 			Heuristic: state.heuristic,
+			Size:      e.boardSize,
 		}
 		moves = append(moves, m)
 		printState(state)
@@ -31,7 +33,7 @@ func getMoves(state *State) {
 	}
 }
 
-func raw(data Move) []byte {
+func raw(data []Move) []byte {
 	rawMove, err := json.Marshal(data)
 	if err != nil {
 		fmt.Println(err)
@@ -56,37 +58,9 @@ func launchServer() {
 		index = 0
 		log.Println("CONNECTED")
 
-		rawMove := raw(moves[index])
+		rawMove := raw(moves)
 		// emit the first State on connection
-		socket.Emit("state", rawMove)
-
-		socket.On("prevState", func() {
-			fmt.Println("PREV")
-			if index > 0 {
-				index--
-				rawMove := raw(moves[index])
-				socket.Emit("state", rawMove)
-			}
-		})
-
-		socket.On("nextState", func() {
-			fmt.Println("NEXT")
-			if index < len(moves) {
-				index++
-				rawMove := raw(moves[index])
-				socket.Emit("state", rawMove)
-			}
-		})
-
-		socket.On("go", func() {
-			fmt.Println("GO")
-			index = 0
-			for index < len(moves) {
-				rawMove := raw(moves[index])
-				socket.Emit("state", rawMove)
-				index++
-			}
-		})
+		socket.Emit("state", string(rawMove))
 
 		socket.On("disconnection", func() {
 			log.Println("DISCONNECTED")
