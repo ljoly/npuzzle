@@ -106,8 +106,8 @@ var (
 
 func parseCommand() {
 	flagFile := flag.String("f", "", "File containing the puzzle to solve")
-	flagH := flag.String("heuristic", "MLC", "Heuristics: Manhattan (\"M\"), Misplaced Tiles (\"MT\") or Manhattan + Linear Conflict (\"MLC\")")
-	flagGreed = flag.Bool("greedy", false, "Use greedy search (if not true, uniform-cost search is used")
+	flagH := flag.String("heuristic", "mlc", "Heuristics: Manhattan \"m\", Misplaced Tiles \"mt\" or Manhattan + Linear Conflict \"mlc\"")
+	flagGreed = flag.Bool("greedy", false, "Use greedy search (if not true, uniform-cost search is used by default)")
 	flagServer = flag.Bool("visualizer", false, "Launch a web app to visualize results on your browser")
 	flag.Parse()
 
@@ -121,11 +121,11 @@ func parseCommand() {
 	// default heuristic: ManhattanDistance + LinearConflict
 	e.heuristic = manhattanLC
 	switch {
-	case *flagH == "M":
+	case *flagH == "m":
 		e.heuristic = manhattan
-	case *flagH == "MT":
+	case *flagH == "mt":
 		e.heuristic = misplaced
-	case *flagH == "MLC":
+	case *flagH == "mlc":
 		e.heuristic = manhattanLC
 	}
 }

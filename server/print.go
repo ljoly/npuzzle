@@ -25,11 +25,22 @@ func printBoard(state State) {
 }
 
 func printResults() {
-	fmt.Println("Heuristic:", e.heuristic)
+	switch e.heuristic {
+	case manhattan:
+		fmt.Println("Heuristic:", "Manhattan Distance")
+	case misplaced:
+		fmt.Println("Heuristic:", "Misplaced Tiles")
+	case manhattanLC:
+		fmt.Println("Heuristic:", "Manhattan Distance + Linear Conflict")
+	}
+	if *flagGreed {
+		fmt.Println("Search type: greedy")
+	} else {
+		fmt.Println("Search type: uniform-cost")
+	}
 	fmt.Println("States selected in the openList:", e.timeComplexity)
 	fmt.Println("Maximum number of states in memory:", e.sizeComplexity)
 	fmt.Println("Number of moves:", e.moves-1)
-	fmt.Println("greedySearch:", *flagGreed)
 }
 
 func printState(state *State) {
