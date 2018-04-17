@@ -2,23 +2,28 @@ import React, { Component } from 'react';
 import TileSection from './tiles/TileSection.jsx'
 import ButtonSection from './buttons/ButtonSection.jsx'
 import io from 'socket.io-client'
+import cron from 'node-cron'
 
 class App extends Component {
     constructor(props) {
         super(props);
-        var socket = io("http://localhost:3000")
-        socket.on('connect', function () {
-            console.log("CONNECTED TO SERVER")
-        })
+        const socket = io("http://localhost:3000")
+        const task = cron.schedule('* * * * * *', function(){
+            this.goNextState()  
+        }.bind(this))
+        task.stop()
         this.state = {
             index: 0,
             all: [],
             puzzle: [],
             size: 0,
-            socket
+            socket,
+            task
         }
     }
     socketHandler() {
+        this.state.socket.on('connect', function () {
+        })
         this.state.socket.on('state', function (data) {
             data = JSON.parse(data)
             this.setState({ all: data });
@@ -26,30 +31,30 @@ class App extends Component {
         }.bind(this))
     }
     prevState() {
+        this.state.task.stop()        
         if (this.state.index > 0) {
             this.state.index--
             this.setState({ puzzle: this.state.all[this.state.index].Board, size: this.state.all[this.state.index].Size })
-            console.log('index', this.state.index)
         }
     }
     nextState() {
+        this.state.task.stop()        
         if (this.state.index < this.state.all.length - 1) {
             this.state.index++
             this.setState({ puzzle: this.state.all[this.state.index].Board, size: this.state.all[this.state.index].Size })
-            console.log('index', this.state.index)
+        }
+    }
+    goNextState() {
+        if (this.state.index < this.state.all.length - 1) {
+            this.state.index++
+            this.setState({ puzzle: this.state.all[this.state.index].Board, size: this.state.all[this.state.index].Size })
         }
     }
     go() {
-        var i = this.state.index
-        const self = this
-        while (i < self.state.all.length - 1) {
-            setInterval(function () {
-                setTimeout(() => self.setState({ puzzle: self.state.all[i].Board }), 1000)
-            }.bind(self), 1000)
-            i++
+        this.state.task.start()
+        if (this.state.index === this.state.all.length - 1) {
+            this.state.task.stop()
         }
-        this.state.index = i
-        console.log('index', this.state.index)
     }
     componentWillMount() {
         this.socketHandler()

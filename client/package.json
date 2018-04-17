@@ -12,6 +12,7 @@
   "dependencies": {
     "babel-preset-react": "^6.24.1",
     "fecha": "^2.3.3",
+    "node-cron": "^1.2.1",
     "prop-types": "^15.6.1",
     "react-dom": "^16.2.0",
     "socket.io": "^2.1.0",
