@@ -1,18 +1,17 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types'
 
-class ButtonSection extends Component{
-    onPrev(){
+class ButtonSection extends Component {
+    onPrev() {
         this.props.prevState();
     }
-    onGo(){
+    onGo() {
         this.props.go();
     }
-    onNext(){
-        this.props.nextState();    
+    onNext() {
+        this.props.nextState();
     }
-    render(){
-        // console.log(this.props.prevState)
+    render() {
         return (
             <div>
                 <div style={{ textAlign: "center" }}>
