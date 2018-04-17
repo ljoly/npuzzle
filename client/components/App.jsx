@@ -8,8 +8,8 @@ class App extends Component {
     constructor(props) {
         super(props);
         const socket = io("http://localhost:3000")
-        const task = cron.schedule('* * * * * *', function(){
-            this.goNextState()  
+        const task = cron.schedule('* * * * * *', function () {
+            this.goNextState()
         }.bind(this))
         task.stop()
         this.state = {
@@ -31,14 +31,14 @@ class App extends Component {
         }.bind(this))
     }
     prevState() {
-        this.state.task.stop()        
+        this.state.task.stop()
         if (this.state.index > 0) {
             this.state.index--
             this.setState({ puzzle: this.state.all[this.state.index].Board, size: this.state.all[this.state.index].Size })
         }
     }
     nextState() {
-        this.state.task.stop()        
+        this.state.task.stop()
         if (this.state.index < this.state.all.length - 1) {
             this.state.index++
             this.setState({ puzzle: this.state.all[this.state.index].Board, size: this.state.all[this.state.index].Size })
