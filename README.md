@@ -27,7 +27,7 @@ server/ make
 
 
 
-Most efficient configurations
+Most effective configurations
 -----------------------------
 - 3x3: Manhattan distance + Linear conflict in greedy search
 - 4x4 and 5x5: Manhattan distance + Linear conflict in uniform-cost search
