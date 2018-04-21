@@ -10,10 +10,15 @@ Overview
 Usage
 -------
 ```
-client/ npm install && npm start
-python assets/generator.py -s 3 > map
-server/ make
-./npuzzle -f map -greedy -visualizer
+client/
+npm install && npm start
+
+assets/
+python generator.py -s 3 > map
+
+server/
+make
+./npuzzle -f ../assets/map -greedy -visualizer
 ```
 ./npuzzle:<br/>
 + -f string<br/>
