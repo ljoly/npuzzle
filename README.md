@@ -3,7 +3,7 @@ npuzzle
 
 Overview
 -------
-- The goal of this project is to programmatically solve the [N-puzzle](https://en.wikipedia.org/wiki/15_puzzle) using the A* algorithm with admissible heuristics
+- The goal of this project is to solve the [N-puzzle](https://en.wikipedia.org/wiki/15_puzzle) using the A* algorithm with admissible heuristics
 - Heuristics used: Manhattan distance, Manhattan distance + Linear conflict, Misplaced tiles
 - Bonus: visualizer => server + front (reactJS) 
 
